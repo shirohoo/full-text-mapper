@@ -1,50 +1,68 @@
 package model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import parser.FullTextWriter;
+import parser.SimpleFullTextWriter;
+import type.PaddingSymbol;
 import type.RecordType;
 
 public class FullTextModelTest {
 
-    private FullTextModel fullTextModel = FullTextModel.createFullText(20);
+    private FullTextModel fullTextModel =
+        FullTextModel.builder()
+            .paddingSymbol(PaddingSymbol.SPACE)
+            .rowSize(100)
+            .headerType("1")
+            .createAt("20211011")
+            .dataType("2")
+            .name("siro")
+            .age("28")
+            .trailerType("3")
+            .build();
 
-    @Test
-    void headersSize() throws Exception {
-        int size = fullTextModel.sizeOf(RecordType.HEADER);
-        assertThat(size).isEqualTo(9);
+    private FullTextWriter<FullTextModel> writer;
+
+    @BeforeEach
+    void setUp() {
+        List<FullTextModel> fullTextList = List.of(this.fullTextModel, fullTextModel);
+        writer = SimpleFullTextWriter.from(fullTextList);
     }
 
     @Test
-    void dataSize() throws Exception {
-        int size = fullTextModel.sizeOf(RecordType.DATA);
-        assertThat(size).isEqualTo(14);
+    void parseHeaderInList() throws Exception {
+        assertThat(writer.writeAll(RecordType.HEADER)).isEqualTo(
+            "120211011                                                                                           "
+                + SimpleFullTextWriter.NEW_LINE
+                + "120211011                                                                                           "
+        );
     }
 
     @Test
-    void trailersSize() throws Exception {
-        int size = fullTextModel.sizeOf(RecordType.TRAILER);
-        assertThat(size).isEqualTo(1);
+    void parseDataInList() throws Exception {
+        assertThat(writer.writeAll(RecordType.DATA)).isEqualTo(
+            "2      siro 28                                                                                      "
+                + SimpleFullTextWriter.NEW_LINE
+                + "2      siro 28                                                                                      "
+        );
     }
 
     @Test
-    void remainingSize_1() throws Exception {
-        int currentDataSize = fullTextModel.sizeOf(RecordType.HEADER);
-        int remainingSize = fullTextModel.remainingSize(currentDataSize);
-        assertThat(remainingSize).isEqualTo(11);
+    void parseTrailerInList() throws Exception {
+        assertThat(writer.writeAll(RecordType.TRAILER)).isEqualTo(
+            "3                                                                                                   "
+                + SimpleFullTextWriter.NEW_LINE
+                + "3                                                                                                   "
+        );
     }
 
     @Test
-    void remainingSize_2() throws Exception {
-        int currentDataSize = fullTextModel.sizeOf(RecordType.DATA);
-        int remainingSize = fullTextModel.remainingSize(currentDataSize);
-        assertThat(remainingSize).isEqualTo(6);
-    }
-
-    @Test
-    void remainingSize_3() throws Exception {
-        int currentDataSize = fullTextModel.sizeOf(RecordType.TRAILER);
-        int remainingSize = fullTextModel.remainingSize(currentDataSize);
-        assertThat(remainingSize).isEqualTo(19);
+    void writeOf() throws Exception {
+        assertThat(writer.writeOf(fullTextModel, RecordType.DATA)).isEqualTo(
+            "2      siro 28                                                                                      "
+        );
     }
 
 }
