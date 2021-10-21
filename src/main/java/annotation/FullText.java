@@ -6,11 +6,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import type.Encoding;
+import type.RecordType;
 
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Header {
+public @interface FullText {
+
+    RecordType recordType() default RecordType.NONE;
 
     String name() default "";
 
