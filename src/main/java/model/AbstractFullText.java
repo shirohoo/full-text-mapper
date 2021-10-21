@@ -1,10 +1,10 @@
 package model;
 
 import static java.util.Arrays.stream;
-import annotation.Data;
-import annotation.Header;
-import annotation.Trailer;
+import annotation.FullText;
 import java.util.Objects;
+import java.util.function.Predicate;
+import type.RecordType;
 
 public abstract class AbstractFullText<T extends AbstractFullText> {
 
@@ -17,8 +17,8 @@ public abstract class AbstractFullText<T extends AbstractFullText> {
         this.rowSize = rowSize;
     }
 
-    public int remainingSize(final int size) {
-        final int remainingSize = this.rowSize - size;
+    public int remainingSize(final int currentDataSize) {
+        final int remainingSize = this.rowSize - currentDataSize;
         if (remainingSize < 0) {
             throw new IllegalStateException(String.format(
                 "Unable to get remaining size. The entered size exceeds the total size. total size: %d. but, entered size: %d", rowSize, remainingSize
@@ -27,29 +27,17 @@ public abstract class AbstractFullText<T extends AbstractFullText> {
         return remainingSize;
     }
 
-    public int headerSize() {
+    public int sizeOf(final RecordType type) {
         return stream(clazz.getDeclaredFields())
-            .map(declaredField -> declaredField.getAnnotation(Header.class))
+            .map(declaredField -> declaredField.getAnnotation(FullText.class))
             .filter(Objects::nonNull)
-            .map(Header::size)
+            .filter(equals(type))
+            .map(FullText::size)
             .reduce(0, Integer::sum);
     }
 
-    public int dataSize() {
-        return stream(clazz.getDeclaredFields())
-            .map(declaredField -> declaredField.getAnnotation(Data.class))
-            .filter(Objects::nonNull)
-            .map(Data::size)
-            .reduce(0, Integer::sum);
-    }
-
-
-    public int trailersSize() {
-        return stream(clazz.getDeclaredFields())
-            .map(declaredField -> declaredField.getAnnotation(Trailer.class))
-            .filter(Objects::nonNull)
-            .map(Trailer::size)
-            .reduce(0, Integer::sum);
+    private Predicate<FullText> equals(final RecordType type) {
+        return annotation -> Objects.equals(annotation.recordType(), type);
     }
 
 }
