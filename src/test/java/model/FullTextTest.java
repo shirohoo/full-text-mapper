@@ -8,39 +8,39 @@ public class FullTextTest {
     private FullText fullText = FullText.createFullText(20);
 
     @Test
-    void getHeadersSize() throws Exception {
-        int size = fullText.getHeadersSize();
+    void headersSize() throws Exception {
+        int size = fullText.headerSize();
         assertThat(size).isEqualTo(9);
     }
 
     @Test
-    void getHeadersPadding() throws Exception {
-        int size = fullText.getHeadersPadding();
-        assertThat(size).isEqualTo(11);
-    }
-
-    @Test
-    void getDataSize() throws Exception {
-        int size = fullText.getDataSize();
+    void dataSize() throws Exception {
+        int size = fullText.dataSize();
         assertThat(size).isEqualTo(14);
     }
 
     @Test
-    void getDataPadding() throws Exception {
-        int size = fullText.getDataPadding();
-        assertThat(size).isEqualTo(6);
-    }
-
-    @Test
-    void geTrailersSize() throws Exception {
-        int size = fullText.geTrailersSize();
+    void trailersSize() throws Exception {
+        int size = fullText.trailersSize();
         assertThat(size).isEqualTo(1);
     }
 
     @Test
-    void getTrailersPadding() throws Exception {
-        int size = fullText.getTrailersPadding();
-        assertThat(size).isEqualTo(19);
+    void remainingSize_1() throws Exception {
+        int remainingSize = fullText.remainingSize(fullText.headerSize());
+        assertThat(remainingSize).isEqualTo(11);
+    }
+
+    @Test
+    void remainingSize_2() throws Exception {
+        int remainingSize = fullText.remainingSize(fullText.dataSize());
+        assertThat(remainingSize).isEqualTo(6);
+    }
+
+    @Test
+    void remainingSize_3() throws Exception {
+        int remainingSize = fullText.remainingSize(fullText.trailersSize());
+        assertThat(remainingSize).isEqualTo(19);
     }
 
 }

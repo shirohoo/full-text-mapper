@@ -17,7 +17,17 @@ public abstract class AbstractFullText<T extends AbstractFullText> {
         this.rowSize = rowSize;
     }
 
-    public int getHeadersSize() {
+    public int remainingSize(final int size) {
+        final int remainingSize = this.rowSize - size;
+        if (remainingSize < 0) {
+            throw new IllegalStateException(String.format(
+                "Unable to get remaining size. The entered size exceeds the total size. total size: %d. but, entered size: %d", rowSize, remainingSize
+            ));
+        }
+        return remainingSize;
+    }
+
+    public int headerSize() {
         return stream(clazz.getDeclaredFields())
             .map(declaredField -> declaredField.getAnnotation(Header.class))
             .filter(Objects::nonNull)
@@ -25,15 +35,7 @@ public abstract class AbstractFullText<T extends AbstractFullText> {
             .reduce(0, Integer::sum);
     }
 
-    public int getHeadersPadding() {
-        final int size = this.rowSize - getHeadersSize();
-        if (size < 0) {
-            throw new IllegalStateException(String.format("Unable to get padding size. Total desired size: %d, Total size of header: %d", rowSize, size));
-        }
-        return size;
-    }
-
-    public int getDataSize() {
+    public int dataSize() {
         return stream(clazz.getDeclaredFields())
             .map(declaredField -> declaredField.getAnnotation(Data.class))
             .filter(Objects::nonNull)
@@ -41,29 +43,13 @@ public abstract class AbstractFullText<T extends AbstractFullText> {
             .reduce(0, Integer::sum);
     }
 
-    public int getDataPadding() {
-        final int size = this.rowSize - getDataSize();
-        if (size < 0) {
-            throw new IllegalStateException(String.format("Unable to get padding size. Total desired size: %d, Total size of data: %d", rowSize, size));
-        }
-        return size;
-    }
 
-
-    public int geTrailersSize() {
+    public int trailersSize() {
         return stream(clazz.getDeclaredFields())
             .map(declaredField -> declaredField.getAnnotation(Trailer.class))
             .filter(Objects::nonNull)
             .map(Trailer::size)
             .reduce(0, Integer::sum);
-    }
-
-    public int getTrailersPadding() {
-        final int size = this.rowSize - geTrailersSize();
-        if (size < 0) {
-            throw new IllegalStateException(String.format("Unable to get padding size. Total desired size: %d, Total size of trailer: %d", rowSize, size));
-        }
-        return size;
     }
 
 }
