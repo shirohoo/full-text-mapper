@@ -1,7 +1,6 @@
-package model;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
+import model.TestFullText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parser.FullTextWriter;
@@ -9,10 +8,10 @@ import parser.SimpleFullTextWriter;
 import type.PaddingSymbol;
 import type.RecordType;
 
-public class FullTextModelTest {
+public class TestFullTextTest {
 
-    private FullTextModel fullTextModel =
-        FullTextModel.builder()
+    private TestFullText testFullText =
+        TestFullText.builder()
             .paddingSymbol(PaddingSymbol.SPACE)
             .rowSize(100)
             .headerType("1")
@@ -23,11 +22,11 @@ public class FullTextModelTest {
             .trailerType("3")
             .build();
 
-    private FullTextWriter<FullTextModel> writer;
+    private FullTextWriter<TestFullText> writer;
 
     @BeforeEach
     void setUp() {
-        List<FullTextModel> fullTextList = List.of(this.fullTextModel, fullTextModel);
+        List<TestFullText> fullTextList = List.of(this.testFullText, testFullText);
         writer = SimpleFullTextWriter.from(fullTextList);
     }
 
@@ -60,7 +59,7 @@ public class FullTextModelTest {
 
     @Test
     void writeOf() throws Exception {
-        assertThat(writer.writeOf(fullTextModel, RecordType.DATA)).isEqualTo(
+        assertThat(writer.writeOf(testFullText, RecordType.DATA)).isEqualTo(
             "2      siro 28                                                                                      "
         );
     }

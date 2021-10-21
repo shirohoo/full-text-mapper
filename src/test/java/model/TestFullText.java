@@ -4,7 +4,7 @@ import annotation.FullText;
 import type.PaddingSymbol;
 import type.RecordType;
 
-public class FullTextModel extends AbstractFullText {
+public class TestFullText extends AbstractFullText {
 
     @FullText(recordType = RecordType.HEADER, name = "HEADER_TYPE", size = 1)
     private String headerType;
@@ -24,7 +24,7 @@ public class FullTextModel extends AbstractFullText {
     @FullText(recordType = RecordType.TRAILER, name = "TRAILER_TYPE", size = 1)
     private String trailerType;
 
-    private FullTextModel(final PaddingSymbol paddingSymbol, final int rowSize, final String headerType, final String createAt, final String dataType, final String name, final String age, final String trailerType) {
+    private TestFullText(final PaddingSymbol paddingSymbol, final int rowSize, final String headerType, final String createAt, final String dataType, final String name, final String age, final String trailerType) {
         super(paddingSymbol, rowSize);
         this.headerType = headerType;
         this.createAt = createAt;
@@ -89,8 +89,8 @@ public class FullTextModel extends AbstractFullText {
             return this;
         }
 
-        public FullTextModel build() {
-            return new FullTextModel(paddingSymbol, rowSize, headerType, createAt, dataType, name, age, trailerType);
+        public TestFullText build() {
+            return new TestFullText(paddingSymbol, rowSize, headerType, createAt, dataType, name, age, trailerType);
         }
 
     }
