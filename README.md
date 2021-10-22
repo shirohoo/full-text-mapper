@@ -99,7 +99,7 @@ public class TestModel {
 
 ```java
 private FullTextMapper mapper = FullTextMapper.create();
-TestModel testModel = mapper.readValue(data, TestModel.class);
+Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
 ```
 
 <br />
@@ -115,8 +115,8 @@ class FullTextMapperTest {
 
     @Test
     void readValue() throws Exception {
-        assertThat(mapper.readValue(mockData(), TestModel.class))
-            .isEqualTo(expectedModel());
+        Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
+        assertThat(testModel.get()).isEqualTo(expectedModel());
     }
 
     private String mockData() {
