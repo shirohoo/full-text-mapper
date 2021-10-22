@@ -15,14 +15,14 @@ public final class FullTextMapper {
 
     private final static Logger log = Logger.getGlobal();
 
-    private final Charset encode;
+    private final Charset encoder;
 
     private FullTextMapper() {
         this(Charset.UTF_8);
     }
 
-    private FullTextMapper(final Charset encode) {
-        this.encode = encode;
+    private FullTextMapper(final Charset encoder) {
+        this.encoder = encoder;
     }
 
     public static FullTextMapper create() {
@@ -33,24 +33,25 @@ public final class FullTextMapper {
         return new FullTextMapper(encode);
     }
 
+    public <E> Optional<E> readValue(final byte[] bytes, final Class<E> clazz) {
+        final String line = convertStr(bytes);
+        verify(line, clazz);
+        return Optional.ofNullable(parse(line, clazz));
+    }
+
     public <E> Optional<E> readValue(final String line, final Class<E> clazz) {
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
     }
 
-    public <E> Optional<E> readValue(final byte[] line, final Class<E> clazz) {
-        verify(line, clazz);
-        return Optional.ofNullable(parse(line, clazz));
-    }
-
-    private <E> void verify(final byte[] bytes, final Class<E> clazz) {
+    private String convertStr(final byte[] bytes) {
         String line = "";
         try {
-            line = new String(bytes, Charset.findBy(encode));
+            line = new String(bytes, Charset.findBy(encoder));
         } catch (UnsupportedEncodingException e) {
             // I'm sure it will never happen. so didn't do anything.
         }
-        verify(line, clazz);
+        return line;
     }
 
     private <E> void verify(final String line, final Class<E> clazz) {
@@ -69,16 +70,6 @@ public final class FullTextMapper {
             .map(field -> field.getAnnotation(FullText.class))
             .map(FullText::length)
             .reduce(0, Integer::sum);
-    }
-
-    private <E> E parse(final byte[] bytes, final Class<E> clazz) {
-        String line = "";
-        try {
-            line = new String(bytes, Charset.findBy(encode));
-        } catch (UnsupportedEncodingException e) {
-            // I'm sure it will never happen. so didn't do anything.
-        }
-        return parse(line, clazz);
     }
 
     private <E> E parse(String line, final Class<E> clazz) {
@@ -113,7 +104,7 @@ public final class FullTextMapper {
                 }
             }
             if (line.length() != 0) {
-                throw new IllegalStateException("Parsing exception. remaining data exists. current data: " + line);
+                throw new IllegalArgumentException("Parsing has been completed. but remaining data exists. current data: " + line);
             }
             return ele;
         } catch (IllegalAccessException e) {
