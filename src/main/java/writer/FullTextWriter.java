@@ -1,4 +1,4 @@
-package parser;
+package writer;
 
 import model.FullText;
 import type.RecordType;

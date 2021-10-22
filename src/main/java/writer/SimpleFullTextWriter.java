@@ -1,4 +1,4 @@
-package parser;
+package writer;
 
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;

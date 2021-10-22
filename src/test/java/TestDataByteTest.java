@@ -3,10 +3,10 @@ import java.util.List;
 import model.TestFullText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import parser.FullTextWriter;
-import parser.SimpleFullTextWriter;
 import type.PaddingSymbol;
 import type.RecordType;
+import writer.FullTextWriter;
+import writer.SimpleFullTextWriter;
 
 public class TestDataByteTest {
 
