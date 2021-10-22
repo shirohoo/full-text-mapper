@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FullText {
 
-    int value();
+    int length() default 0;
 
-    int length();
+    boolean paddingOnly() default false;
 
     Charset encoding() default Charset.UTF_8;
 
