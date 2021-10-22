@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import model.FullText;
 import type.RecordType;
 
-public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<T> {
+public class HDTStyleFullTextWriter<T extends FullText> implements FullTextWriter<T> {
 
     public static final String NEW_LINE = System.getProperty("line.separator");
 
@@ -19,7 +19,7 @@ public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<
 
     private final int rowSize;
 
-    public SimpleFullTextWriter(final List<T> fullTextList) {
+    public HDTStyleFullTextWriter(final List<T> fullTextList) {
         if (fullTextList.size() < 1) {
             throw new IllegalArgumentException("List size must be grater then 1.");
         }
@@ -29,13 +29,13 @@ public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<
         this.rowSize = forInitialize.getRowSize();
     }
 
-    public static <T extends FullText> SimpleFullTextWriter<T> from(final List<T> fullText) {
-        return new SimpleFullTextWriter<T>(fullText);
+    public static <T extends FullText> HDTStyleFullTextWriter<T> from(final List<T> fullText) {
+        return new HDTStyleFullTextWriter<>(fullText);
     }
 
     @Override
     public String write() {
-        return null;
+        return dataSummation(fullTextList.get(0));
     }
 
     @Override
@@ -45,9 +45,17 @@ public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<
 
     @Override
     public String writeAll(final RecordType recordType) {
-        return fullTextList.stream()
-            .map(fullText -> parse(fullText, recordType))
-            .collect(Collectors.joining(NEW_LINE));
+        return writeAllOfType(recordType);
+    }
+
+    private String dataSummation(final T firstElement) {
+        return new StringBuilder()
+            .append(writeOf(firstElement, RecordType.HEADER))
+            .append(NEW_LINE)
+            .append(writeAll(RecordType.DATA))
+            .append(NEW_LINE)
+            .append(writeOf(firstElement, RecordType.TRAILER))
+            .toString();
     }
 
     private String parse(final T fullText, final RecordType recordType) {
@@ -61,6 +69,9 @@ public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<
             for (Field field : fullText.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 DataByte annotation = field.getAnnotation(DataByte.class);
+                if (annotation.recordType().equals(RecordType.NONE)) {
+                    throw new IllegalStateException("HDTStyleFullTextWriter cannot parse RecordType.NONE. field: " + field.getName());
+                }
                 if (annotation.recordType().equals(recordType) && nonNull(annotation)) {
                     String fieldValue = (String) field.get(fullText);
                     field.set(fullText, (getPadding(annotation.size(), fieldValue) + fieldValue));
@@ -95,6 +106,12 @@ public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<
             );
         }
         return data;
+    }
+
+    private String writeAllOfType(final RecordType recordType) {
+        return fullTextList.stream()
+            .map(fullText -> parse(fullText, recordType))
+            .collect(Collectors.joining(NEW_LINE));
     }
 
 }
