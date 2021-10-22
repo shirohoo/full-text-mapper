@@ -12,8 +12,8 @@ class FullTextMapperTest {
 
     @Test
     void readValue() throws Exception {
-        Optional<TestModel> optional = mapper.readValue(mockData(), TestModel.class);
-        assertThat(optional.get()).isEqualTo(expectedModel());
+        Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
+        assertThat(testModel.get()).isEqualTo(expectedModel());
     }
 
     private String mockData() {
