@@ -24,7 +24,8 @@ public class TestFullText extends AbstractFullText {
     @FullText(recordType = RecordType.TRAILER, name = "TRAILER_TYPE", size = 1)
     private String trailerType;
 
-    private TestFullText(final PaddingSymbol paddingSymbol, final int rowSize, final String headerType, final String createAt, final String dataType, final String name, final String age, final String trailerType) {
+    private TestFullText(final PaddingSymbol paddingSymbol, final int rowSize, final String headerType, final String createAt,
+        final String dataType, final String name, final String age, final String trailerType) {
         super(paddingSymbol, rowSize);
         this.headerType = headerType;
         this.createAt = createAt;
