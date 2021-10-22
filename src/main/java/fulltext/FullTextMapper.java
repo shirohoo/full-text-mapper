@@ -72,7 +72,7 @@ public final class FullTextMapper {
      *              A class to instantiate by binding data read from the full text.
      * @return
      */
-    public <E> Optional<E> readValue(final byte[] bytes, final Class<E> clazz) {
+    public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
         final String line = convertStr(bytes);
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
@@ -97,7 +97,7 @@ public final class FullTextMapper {
      *              A class to instantiate by binding data read from the full text.
      * @return
      */
-    public <E> Optional<E> readValue(final String line, final Class<E> clazz) {
+    public <T> Optional<T> readValue(final String line, final Class<T> clazz) {
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
     }
@@ -112,7 +112,7 @@ public final class FullTextMapper {
         return line;
     }
 
-    private <E> void verify(final String line, final Class<E> clazz) {
+    private <T> void verify(final String line, final Class<T> clazz) {
         final int lineLength = line.length();
         final int definedTotalLength = getDefinedTotalLength(clazz);
         if (lineLength != definedTotalLength) {
@@ -123,16 +123,16 @@ public final class FullTextMapper {
         }
     }
 
-    private <E> int getDefinedTotalLength(final Class<E> clazz) {
+    private <T> int getDefinedTotalLength(final Class<T> clazz) {
         return stream(clazz.getDeclaredFields())
             .map(field -> field.getAnnotation(FullText.class))
             .map(FullText::length)
             .reduce(0, Integer::sum);
     }
 
-    private <E> E parse(String line, final Class<E> clazz) {
+    private <T> T parse(String line, final Class<T> clazz) {
         try {
-            final E ele = createInstance(clazz);
+            final T ele = createInstance(clazz);
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
                 int length = field.getAnnotation(FullText.class).length();
@@ -171,8 +171,8 @@ public final class FullTextMapper {
         }
     }
 
-    private <E> E createInstance(final Class<E> clazz) {
-        Constructor<E> defaultConstructor = (Constructor<E>) clazz.getDeclaredConstructors()[0]; // Make it work even if the default constructor's access modifier is private
+    private <T> T createInstance(final Class<T> clazz) {
+        Constructor<T> defaultConstructor = (Constructor<T>) clazz.getDeclaredConstructors()[0]; // Make it work even if the default constructor's access modifier is private
         defaultConstructor.setAccessible(true);
         try {
             return defaultConstructor.newInstance();
