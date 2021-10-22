@@ -91,7 +91,7 @@ public final class FullTextMapper {
      * 몇가지 예외가 발생할 수 있지만, 예외가 발생 할 경우 로그를 남기고 항상 Optional을 반환합니다.
      * Several exceptions may occur, but when an exception occurs, it logs and always returns Optional.
      *
-     * @param line 전문에서 읽어온 문자열 타입의 데이터입니다.
+     * @param line  전문에서 읽어온 문자열 타입의 데이터입니다.
      *              String type data read from the full text.
      * @param clazz 전문에서 읽어온 데이터를 바인딩하여 인스턴스화할 클래스입니다.
      *              A class to instantiate by binding data read from the full text.
@@ -139,25 +139,32 @@ public final class FullTextMapper {
                 Class<?> classType = field.getType();
 
                 if (classType.equals(String.class)) {
-                    field.set(ele, slice(line, length));
+                    String sliceData = slice(line, length);
+                    field.set(ele, sliceData);
                     line = line.substring(length);
                 } else if (classType.equals(int.class) || classType.equals(Integer.class)) {
-                    field.set(ele, Integer.valueOf(slice(line, length)));
+                    String sliceData = slice(line, length);
+                    field.set(ele, Integer.valueOf(sliceData));
                     line = line.substring(length);
                 } else if (classType.equals(long.class) || classType.equals(Long.class)) {
-                    field.set(ele, Long.valueOf(slice(line, length)));
+                    String sliceData = slice(line, length);
+                    field.set(ele, Long.valueOf(sliceData));
                     line = line.substring(length);
                 } else if (classType.equals(double.class) || classType.equals(Double.class)) {
-                    field.set(ele, Double.valueOf(slice(line, length)));
+                    String sliceData = slice(line, length);
+                    field.set(ele, Double.valueOf(sliceData));
                     line = line.substring(length);
                 } else if (classType.equals(LocalDate.class)) {
-                    field.set(ele, LocalDate.parse(slice(line, length), DateTimeFormatter.BASIC_ISO_DATE));
+                    String sliceData = slice(line, length);
+                    field.set(ele, LocalDate.parse(sliceData, DateTimeFormatter.BASIC_ISO_DATE));
                     line = line.substring(length);
                 } else if (classType.equals(LocalDateTime.class)) {
-                    field.set(ele, LocalDate.parse(slice(line, length), DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+                    String sliceData = slice(line, length);
+                    field.set(ele, LocalDate.parse(sliceData, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
                     line = line.substring(length);
                 } else if (classType.equals(BigDecimal.class)) {
-                    field.set(ele, new BigDecimal(slice(line, length)));
+                    String sliceData = slice(line, length);
+                    field.set(ele, new BigDecimal(sliceData));
                     line = line.substring(length);
                 }
             }
