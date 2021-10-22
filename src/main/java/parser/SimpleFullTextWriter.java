@@ -2,6 +2,7 @@ package parser;
 
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
+import annotation.DataByte;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<
         try {
             for (Field field : fullText.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
-                annotation.FullText annotation = field.getAnnotation(annotation.FullText.class);
+                DataByte annotation = field.getAnnotation(DataByte.class);
                 if (annotation.recordType().equals(recordType) && nonNull(annotation)) {
                     String fieldValue = (String) field.get(fullText);
                     field.set(fullText, (getPadding(annotation.size(), fieldValue) + fieldValue));

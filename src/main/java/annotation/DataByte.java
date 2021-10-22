@@ -11,7 +11,7 @@ import type.RecordType;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FullText {
+public @interface DataByte {
 
     RecordType recordType() default RecordType.NONE;
 

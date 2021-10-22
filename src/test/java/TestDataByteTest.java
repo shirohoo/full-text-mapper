@@ -8,7 +8,7 @@ import parser.SimpleFullTextWriter;
 import type.PaddingSymbol;
 import type.RecordType;
 
-public class TestFullTextTest {
+public class TestDataByteTest {
 
     private TestFullText testFullText =
         TestFullText.builder()
