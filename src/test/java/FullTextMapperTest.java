@@ -1,6 +1,7 @@
 import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class FullTextMapperTest {
@@ -9,8 +10,8 @@ class FullTextMapperTest {
 
     @Test
     void readValue() throws Exception {
-        assertThat(mapper.readValue(mockData(), TestModel.class))
-            .isEqualTo(expectedModel());
+        Optional<TestModel> optional = mapper.readValue(mockData(), TestModel.class);
+        assertThat(optional.get()).isEqualTo(expectedModel());
     }
 
     private String mockData() {
