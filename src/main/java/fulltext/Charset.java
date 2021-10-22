@@ -1,3 +1,5 @@
+package fulltext;
+
 import static java.util.Arrays.stream;
 import java.util.Map;
 import java.util.NoSuchElementException;

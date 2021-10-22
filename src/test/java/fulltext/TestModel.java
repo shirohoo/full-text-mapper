@@ -1,3 +1,5 @@
+package fulltext;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -52,7 +54,7 @@ public class TestModel {
 
     @Override
     public String toString() {
-        return "TestModel{" +
+        return "fulltext.TestModel{" +
             "headerType='" + headerType + '\'' +
             ", createAt='" + createAt + '\'' +
             ", headerPadding='" + headerPadding + '\'' +
