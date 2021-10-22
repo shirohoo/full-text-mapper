@@ -1,5 +1,6 @@
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -7,8 +8,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 public final class FullTextMapper {
+
+    private final static Logger log = Logger.getGlobal();
 
     private final Charset encode;
 
@@ -28,9 +33,24 @@ public final class FullTextMapper {
         return new FullTextMapper(encode);
     }
 
-    public <E> E readValue(String line, final Class<E> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public <E> Optional<E> readValue(final String line, final Class<E> clazz) {
         verify(line, clazz);
-        return parse(line, clazz);
+        return Optional.ofNullable(parse(line, clazz));
+    }
+
+    public <E> Optional<E> readValue(final byte[] line, final Class<E> clazz) {
+        verify(line, clazz);
+        return Optional.ofNullable(parse(line, clazz));
+    }
+
+    private <E> void verify(final byte[] bytes, final Class<E> clazz) {
+        String line = "";
+        try {
+            line = new String(bytes, Charset.findBy(encode));
+        } catch (UnsupportedEncodingException e) {
+            // I'm sure it will never happen. so didn't do anything.
+        }
+        verify(line, clazz);
     }
 
     private <E> void verify(final String line, final Class<E> clazz) {
@@ -51,52 +71,76 @@ public final class FullTextMapper {
             .reduce(0, Integer::sum);
     }
 
-    private <E> E parse(String line, final Class<E> clazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        final E ele = createInstance(clazz);
-        for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            int length = field.getAnnotation(FullText.class).length();
-            Class<?> classType = field.getType();
-            if (classType.equals(String.class)) {
-                String data = line.substring(0, length).trim();
-                line = line.substring(length);
-                field.set(ele, data);
-            } else if (classType.equals(int.class) || classType.equals(Integer.class)) {
-                String data = line.substring(0, length).trim();
-                line = line.substring(length);
-                field.set(ele, Integer.valueOf(data));
-            } else if (classType.equals(long.class) || classType.equals(Long.class)) {
-                String data = line.substring(0, length).trim();
-                line = line.substring(length);
-                field.set(ele, Long.valueOf(data));
-            } else if (classType.equals(double.class) || classType.equals(Double.class)) {
-                String data = line.substring(0, length).trim();
-                line = line.substring(length);
-                field.set(ele, Double.valueOf(data));
-            } else if (classType.equals(LocalDate.class)) {
-                String data = line.substring(0, length).trim();
-                line = line.substring(length);
-                field.set(ele, LocalDate.parse(data, DateTimeFormatter.BASIC_ISO_DATE));
-            } else if (classType.equals(LocalDateTime.class)) {
-                String data = line.substring(0, length).trim();
-                line = line.substring(length);
-                field.set(ele, LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
-            } else if (classType.equals(BigDecimal.class)) {
-                String data = line.substring(0, length).trim();
-                line = line.substring(length);
-                field.set(ele, new BigDecimal(data));
-            }
+    private <E> E parse(final byte[] bytes, final Class<E> clazz) {
+        String line = "";
+        try {
+            line = new String(bytes, Charset.findBy(encode));
+        } catch (UnsupportedEncodingException e) {
+            // I'm sure it will never happen. so didn't do anything.
         }
-        if (line.length() != 0) {
-            throw new IllegalStateException("Parsing exception. remaining data exists. current data: " + line);
-        }
-        return ele;
+        return parse(line, clazz);
     }
 
-    private <E> E createInstance(final Class<E> clazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    private <E> E parse(String line, final Class<E> clazz) {
+        try {
+            final E ele = createInstance(clazz);
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                int length = field.getAnnotation(FullText.class).length();
+                Class<?> classType = field.getType();
+
+                if (classType.equals(String.class)) {
+                    field.set(ele, slice(line, length));
+                    line = line.substring(length);
+                } else if (classType.equals(int.class) || classType.equals(Integer.class)) {
+                    field.set(ele, Integer.valueOf(slice(line, length)));
+                    line = line.substring(length);
+                } else if (classType.equals(long.class) || classType.equals(Long.class)) {
+                    field.set(ele, Long.valueOf(slice(line, length)));
+                    line = line.substring(length);
+                } else if (classType.equals(double.class) || classType.equals(Double.class)) {
+                    field.set(ele, Double.valueOf(slice(line, length)));
+                    line = line.substring(length);
+                } else if (classType.equals(LocalDate.class)) {
+                    field.set(ele, LocalDate.parse(slice(line, length), DateTimeFormatter.BASIC_ISO_DATE));
+                    line = line.substring(length);
+                } else if (classType.equals(LocalDateTime.class)) {
+                    field.set(ele, LocalDate.parse(slice(line, length), DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+                    line = line.substring(length);
+                } else if (classType.equals(BigDecimal.class)) {
+                    field.set(ele, new BigDecimal(slice(line, length)));
+                    line = line.substring(length);
+                }
+            }
+            if (line.length() != 0) {
+                throw new IllegalStateException("Parsing exception. remaining data exists. current data: " + line);
+            }
+            return ele;
+        } catch (IllegalAccessException e) {
+            log.severe(e.getMessage() + ". returned null.");
+            return null;
+        }
+    }
+
+    private <E> E createInstance(final Class<E> clazz) {
         Constructor<E> defaultConstructor = (Constructor<E>) clazz.getDeclaredConstructors()[0]; // Make it work even if the default constructor's access modifier is private
         defaultConstructor.setAccessible(true);
-        return defaultConstructor.newInstance();
+        try {
+            return defaultConstructor.newInstance();
+        } catch (InstantiationException e) {
+            log.severe(e.getMessage() + ". returned null.");
+            return null;
+        } catch (IllegalAccessException e) {
+            log.severe(e.getMessage() + ". returned null.");
+            return null;
+        } catch (InvocationTargetException e) {
+            log.severe(e.getMessage() + ". returned null.");
+            return null;
+        }
+    }
+
+    private String slice(final String line, final int length) {
+        return line.substring(0, length).trim();
     }
 
 }
