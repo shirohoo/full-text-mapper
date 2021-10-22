@@ -1,27 +1,26 @@
 package model;
 
-import annotation.FullText;
 import type.PaddingSymbol;
 import type.RecordType;
 
-public class TestFullText extends AbstractFullText {
+public class TestFullText extends FullText {
 
-    @FullText(recordType = RecordType.HEADER, name = "HEADER_TYPE", size = 1)
+    @annotation.FullText(recordType = RecordType.HEADER, name = "HEADER_TYPE", size = 1)
     private String headerType;
 
-    @FullText(recordType = RecordType.HEADER, name = "CREATE_AT", size = 8)
+    @annotation.FullText(recordType = RecordType.HEADER, name = "CREATE_AT", size = 8)
     private String createAt; // yyyyMMdd
 
-    @FullText(recordType = RecordType.DATA, name = "DATA_TYPE", size = 1)
+    @annotation.FullText(recordType = RecordType.DATA, name = "DATA_TYPE", size = 1)
     private String dataType;
 
-    @FullText(recordType = RecordType.DATA, name = "NAME", size = 10)
+    @annotation.FullText(recordType = RecordType.DATA, name = "NAME", size = 10)
     private String name;
 
-    @FullText(recordType = RecordType.DATA, name = "AGE", size = 3)
+    @annotation.FullText(recordType = RecordType.DATA, name = "AGE", size = 3)
     private String age;
 
-    @FullText(recordType = RecordType.TRAILER, name = "TRAILER_TYPE", size = 1)
+    @annotation.FullText(recordType = RecordType.TRAILER, name = "TRAILER_TYPE", size = 1)
     private String trailerType;
 
     private TestFullText(final PaddingSymbol paddingSymbol, final int rowSize, final String headerType, final String createAt,

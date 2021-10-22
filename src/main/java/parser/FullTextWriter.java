@@ -1,9 +1,9 @@
 package parser;
 
-import model.AbstractFullText;
+import model.FullText;
 import type.RecordType;
 
-public interface FullTextWriter<T extends AbstractFullText> {
+public interface FullTextWriter<T extends FullText> {
 
     String write();
 

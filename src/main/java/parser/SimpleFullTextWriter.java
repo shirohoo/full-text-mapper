@@ -2,14 +2,13 @@ package parser;
 
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
-import annotation.FullText;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
-import model.AbstractFullText;
+import model.FullText;
 import type.RecordType;
 
-public class SimpleFullTextWriter<T extends AbstractFullText> implements FullTextWriter<T> {
+public class SimpleFullTextWriter<T extends FullText> implements FullTextWriter<T> {
 
     public static final String NEW_LINE = System.getProperty("line.separator");
 
@@ -29,7 +28,7 @@ public class SimpleFullTextWriter<T extends AbstractFullText> implements FullTex
         this.rowSize = forInitialize.getRowSize();
     }
 
-    public static <T extends AbstractFullText> SimpleFullTextWriter<T> from(final List<T> fullText) {
+    public static <T extends FullText> SimpleFullTextWriter<T> from(final List<T> fullText) {
         return new SimpleFullTextWriter<T>(fullText);
     }
 
@@ -60,7 +59,7 @@ public class SimpleFullTextWriter<T extends AbstractFullText> implements FullTex
         try {
             for (Field field : fullText.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
-                FullText annotation = field.getAnnotation(FullText.class);
+                annotation.FullText annotation = field.getAnnotation(annotation.FullText.class);
                 if (annotation.recordType().equals(recordType) && nonNull(annotation)) {
                     String fieldValue = (String) field.get(fullText);
                     field.set(fullText, (getPadding(annotation.size(), fieldValue) + fieldValue));
