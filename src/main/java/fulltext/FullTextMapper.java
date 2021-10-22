@@ -2,6 +2,7 @@ package fulltext;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import static java.util.Objects.isNull;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -103,16 +105,17 @@ public final class FullTextMapper {
     }
 
     private String convertStr(final byte[] bytes) {
-        String line = "";
         try {
-            line = new String(bytes, Charset.findBy(encoder));
+            return new String(bytes, Charset.findBy(encoder));
         } catch (UnsupportedEncodingException e) {
             // I'm sure it will never happen. so didn't do anything.
+            return null;
         }
-        return line;
     }
 
     private <T> void verify(final String line, final Class<T> clazz) {
+        Objects.requireNonNull(line, "line is must not be null.");
+        Objects.requireNonNull(clazz, "clazz is must not be null.");
         final int lineLength = line.length();
         final int definedTotalLength = getDefinedTotalLength(clazz);
         if (lineLength != definedTotalLength) {
@@ -131,8 +134,27 @@ public final class FullTextMapper {
     }
 
     private <T> T parse(String line, final Class<T> clazz) {
+        final T ele = newInstance(clazz);
+        return isNull(ele) ? null : dataBind(line, clazz, ele);
+    }
+
+    private <T> T newInstance(final Class<T> clazz) {
         try {
-            final T ele = createInstance(clazz);
+            return invokeConstructor(clazz);
+        } catch (Exception e) {
+            errorLogging(e.getMessage());
+            return null;
+        }
+    }
+
+    private <T> T invokeConstructor(final Class<T> clazz) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        Constructor<T> defaultConstructor = (Constructor<T>) clazz.getDeclaredConstructors()[0]; // Make it work even if the default constructor's access modifier is private
+        defaultConstructor.setAccessible(true);
+        return defaultConstructor.newInstance();
+    }
+
+    private <T> T dataBind(String line, final Class<T> clazz, final T ele) {
+        try {
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
                 int length = field.getAnnotation(FullText.class).length();
@@ -169,27 +191,11 @@ public final class FullTextMapper {
                 }
             }
             if (line.length() != 0) {
-                throw new IllegalArgumentException("Parsing has been completed. but remaining data exists. current data: " + line);
+                errorLogging("Parsing has been completed. but remaining data exists. current data: " + line);
+                return null;
             }
             return ele;
         } catch (IllegalAccessException e) {
-            errorLogging(e.getMessage());
-            return null;
-        }
-    }
-
-    private <T> T createInstance(final Class<T> clazz) {
-        Constructor<T> defaultConstructor = (Constructor<T>) clazz.getDeclaredConstructors()[0]; // Make it work even if the default constructor's access modifier is private
-        defaultConstructor.setAccessible(true);
-        try {
-            return defaultConstructor.newInstance();
-        } catch (InstantiationException e) {
-            errorLogging(e.getMessage());
-            return null;
-        } catch (IllegalAccessException e) {
-            errorLogging(e.getMessage());
-            return null;
-        } catch (InvocationTargetException e) {
             errorLogging(e.getMessage());
             return null;
         }
