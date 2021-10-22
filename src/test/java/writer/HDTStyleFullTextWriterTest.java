@@ -1,14 +1,16 @@
+package writer;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static writer.HDTStyleFullTextWriter.NEW_LINE;
+import static writer.HDTStyleFullTextWriter.from;
 import java.util.List;
 import model.TestFullText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import type.PaddingSymbol;
 import type.RecordType;
-import writer.FullTextWriter;
-import writer.SimpleFullTextWriter;
 
-public class TestDataByteTest {
+public class HDTStyleFullTextWriterTest {
 
     private TestFullText testFullText =
         TestFullText.builder()
@@ -27,32 +29,45 @@ public class TestDataByteTest {
     @BeforeEach
     void setUp() {
         List<TestFullText> fullTextList = List.of(this.testFullText, testFullText);
-        writer = SimpleFullTextWriter.from(fullTextList);
+        writer = from(fullTextList);
     }
 
     @Test
-    void parseHeaderInList() throws Exception {
+    void write() throws Exception {
+        assertThat(writer.write()).isEqualTo(
+            "120211011                                                                                           " +
+                NEW_LINE +
+                "2      siro 28                                                                                      " +
+                NEW_LINE +
+                "2      siro 28                                                                                      " +
+                NEW_LINE +
+                "3                                                                                                   "
+        );
+    }
+
+    @Test
+    void writeAllHeader() throws Exception {
         assertThat(writer.writeAll(RecordType.HEADER)).isEqualTo(
             "120211011                                                                                           "
-                + SimpleFullTextWriter.NEW_LINE
+                + NEW_LINE
                 + "120211011                                                                                           "
         );
     }
 
     @Test
-    void parseDataInList() throws Exception {
+    void writeAllData() throws Exception {
         assertThat(writer.writeAll(RecordType.DATA)).isEqualTo(
             "2      siro 28                                                                                      "
-                + SimpleFullTextWriter.NEW_LINE
+                + NEW_LINE
                 + "2      siro 28                                                                                      "
         );
     }
 
     @Test
-    void parseTrailerInList() throws Exception {
+    void writeAllTrailer() throws Exception {
         assertThat(writer.writeAll(RecordType.TRAILER)).isEqualTo(
             "3                                                                                                   "
-                + SimpleFullTextWriter.NEW_LINE
+                + NEW_LINE
                 + "3                                                                                                   "
         );
     }
