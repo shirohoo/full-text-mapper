@@ -35,11 +35,15 @@
 
 <br />
 
-# ⚙ 솔루션
+# ⚙ 사용 방법
 
-전문에 매핑할 클래스를 작성하고 `@FullText`를 각 필드에 정의합니다.
+기본적으로 전문 한줄과 객체 하나가 일대일로 매핑됩니다.
 
-***이때 `기본생성자`가 반드시 필요하며, `접근제한자`는 `private`이여도 무관합니다.***
+전문과 매핑될 클래스를 작성하고 `@FullText`를 각 필드에 정의합니다.
+
+***이때 `기본생성자`가 반드시 필요하며, `접근제한자`가 `private`이여도 괜찮습니다.***
+
+<br />
 
 ```java
 public class TestModel {
@@ -78,9 +82,51 @@ public class TestModel {
 
 `FullTextMapper` 인스턴스를 생성하고 `readValue(String, T)`를 호출합니다.
 
+<br />
+
 ```java
 private FullTextMapper mapper = FullTextMapper.create();
 TestModel testModel = mapper.readValue(data, TestModel.class);
+```
+
+<br />
+
+간단한 테스트 코드는 다음과 같습니다
+
+<br />
+
+```java
+class FullTextMapperTest {
+
+    private FullTextMapper mapper = FullTextMapper.create();
+
+    @Test
+    void readValue() throws Exception {
+        assertThat(mapper.readValue(mockData(), TestModel.class))
+            .isEqualTo(expectedModel());
+    }
+
+    private String mockData() {
+        return "120211011                                                                                           " +
+            "2      siro 28                                                                                      " +
+            "3                                                                                                   ";
+    }
+
+    private TestModel expectedModel() {
+        return TestModel.builder()
+            .headerType("1")
+            .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
+            .headerPadding("")
+            .dataType("2")
+            .name("siro")
+            .age(28)
+            .dataPadding("")
+            .trailerType("3")
+            .trailerPadding("")
+            .build();
+    }
+
+}
 ```
 
 <br />
