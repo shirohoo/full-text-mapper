@@ -34,3 +34,53 @@
 - 패딩 문자
 
 <br />
+
+# ⚙ 솔루션
+
+전문에 매핑할 클래스를 작성하고 `@FullText`을 각 필드에 정의합니다.
+
+***이때 `기본생성자`가 반드시 필요하며, `접근제한자`는 `private`이여도 무관합니다.***
+
+```java
+public class TestModel {
+
+    @FullText(length = 1)
+    private String headerType;
+
+    @FullText(length = 8)
+    private LocalDate createAt; // yyyyMMdd
+
+    @FullText(length = 91)
+    private String headerPadding;
+
+    @FullText(length = 1)
+    private String dataType;
+
+    @FullText(length = 10)
+    private String name;
+
+    @FullText(length = 3)
+    private int age;
+
+    @FullText(length = 86)
+    private String dataPadding;
+
+    @FullText(length = 1)
+    private String trailerType;
+
+    @FullText(length = 99)
+    private String trailerPadding;
+
+}
+```
+
+<br />
+
+`FullTextMapper` 인스턴스를 생성하고 `readValue(String, T)`를 호출합니다.
+
+```java
+private FullTextMapper mapper = FullTextMapper.create();
+TestModel testModel = mapper.readValue(data, TestModel.class);
+```
+
+<br />
