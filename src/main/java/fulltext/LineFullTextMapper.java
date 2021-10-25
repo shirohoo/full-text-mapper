@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -18,56 +19,27 @@ import java.util.logging.Logger;
 /**
  * {@link LineFullTextMapper} 는 전문과 객체를 서로 매핑합니다.
  * <p>
- * 사용하기 위해서는 매핑하려는 Object에 @FullText가 알맞게 선언돼있어야 합니다.
+ * 사용하기 위해서는 매핑하려는 Object에 @FullText와 @Protocol이 알맞게 선언돼있어야 합니다.
  * <p>
- * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} must be properly declared in the object to be mapped.
+ * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Protocol} must be properly declared in the object to be mapped.
  */
-public final class LineFullTextMapper implements FullTextMapper{
+public final class LineFullTextMapper implements FullTextMapper {
 
     private final static Logger log = Logger.getGlobal();
-
-    private final Charset encoder;
 
     /**
      * 이 정적 팩토리 메소드는 기본 생성자를 호출합니다.
      * <p>
      * This static factory method is invoked default constructor.
      * <p>
-     * <p>
-     * 반환된 인스턴스의 인코딩 유형은 기본적으로 UTF-8로 설정되어 있습니다.
-     * <p>
-     * returned instance has encoding type set to UTF-8 by default.
-     * <p>
      *
      * @return instance of fulltext.FullTextMapper
      */
-    public static LineFullTextMapper create() {
+    public static LineFullTextMapper newInstance() {
         return new LineFullTextMapper();
     }
 
     private LineFullTextMapper() {
-        this(Charset.UTF_8);
-    }
-
-    /**
-     * 이 팩토리 메서드는 fulltext.Charset을 전달받는 생성자를 호출합니다.
-     * <p>
-     * This factory method calls the constructor taking fulltext.Charset as an argument.
-     * <p>
-     * <p>
-     * 기본 인코딩은 UTF-8이지만 다른 인코딩을 사용하려면 이 메서드를 호출해야 합니다.
-     * <p>
-     * The default encoding is UTF-8, but you should invoke this method if you want to use a different encoding.
-     * <p>
-     *
-     * @return instance of fulltext.FullTextMapper
-     */
-    public static LineFullTextMapper create(final Charset encode) {
-        return new LineFullTextMapper(encode);
-    }
-
-    private LineFullTextMapper(final Charset encoder) {
-        this.encoder = encoder;
     }
 
     /**
@@ -86,19 +58,36 @@ public final class LineFullTextMapper implements FullTextMapper{
      * If data binding completes without any problems, return the created instance.
      * <p>
      * <p>
-     * 몇가지 예외가 발생할 수 있지만, 예외가 발생 할 경우 로그를 남기고 항상 Optional을 반환합니다.
+     * 몇가지 예외가 발생할 수 있지만, 예외가 발생 할 경우 항상 에러 로그와 함께 Optional을 반환합니다.
      * <p>
-     * Several exceptions may occur, but when an exception occurs, it logs and always returns Optional.
+     * Several exceptions may occur, but when an exception occurs, an Optional is always returned with an error log.
      * <p>
      *
      * @param bytes 전문에서 읽어온 바이트 배열 타입의 데이터입니다. Byte array type data read from the full text.
      * @param clazz 전문에서 읽어온 데이터를 바인딩하여 인스턴스화할 클래스입니다. A class to instantiate by binding data read from the full text.
-     * @return
+     * @return instance of Optional{@literal <}T>
      */
     public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
-        final String line = convertStr(bytes);
+        final String line = convertStr(bytes, getFullText(clazz).encoding());
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
+    }
+
+    private String convertStr(final byte[] bytes, Charset encoder) {
+        try {
+            return new String(bytes, Charset.findBy(encoder));
+        } catch (UnsupportedEncodingException e) {
+            // I'm sure it will never happen. so didn't do anything.
+            return null;
+        }
+    }
+
+    private <T> FullText getFullText(final Class<T> clazz) {
+        final FullText annotation = clazz.getAnnotation(FullText.class);
+        if (isNull(annotation)) {
+            throw new NoSuchElementException("Could not find @FullText in argument object. please add @FullText at class level.");
+        }
+        return annotation;
     }
 
     /**
@@ -124,45 +113,53 @@ public final class LineFullTextMapper implements FullTextMapper{
      *
      * @param line  전문에서 읽어온 문자열 타입의 데이터입니다. String type data read from the full text.
      * @param clazz 전문에서 읽어온 데이터를 바인딩하여 인스턴스화할 클래스입니다. A class to instantiate by binding data read from the full text.
-     * @return
+     * @return instance of Optional{@literal <}T>
      */
     public <T> Optional<T> readValue(final String line, final Class<T> clazz) {
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
     }
 
-    private String convertStr(final byte[] bytes) {
-        try {
-            return new String(bytes, Charset.findBy(encoder));
-        } catch (UnsupportedEncodingException e) {
-            // I'm sure it will never happen. so didn't do anything.
-            return null;
-        }
-    }
-
     private <T> void verify(final String line, final Class<T> clazz) {
         Objects.requireNonNull(line, "line is must not be null.");
         Objects.requireNonNull(clazz, "clazz is must not be null.");
+
         final int lineLength = line.length();
-        final int definedTotalLength = getDefinedTotalLength(clazz);
-        if (lineLength != definedTotalLength) {
+        final int fullTextTotalLength = getFullText(clazz).totalLength();
+        final int protocolTotalLength = getProtocolTotalLength(clazz);
+
+        if (fullTextTotalLength != protocolTotalLength) {
             throw new IllegalArgumentException(format(
-                "The full text specification and the information in the argument object do not match. full text length: %d, length defined in object: %d",
-                lineLength, definedTotalLength
+                "There is a problem with setting the full text object. @FullText: %d, @Protocol total length: %d",
+                fullTextTotalLength, protocolTotalLength
+            ));
+        }
+
+        if (lineLength != fullTextTotalLength) {
+            throw new IllegalArgumentException(format(
+                "The full text specification and the information in the argument object do not match. full text length: %d, @FullText length: %d",
+                lineLength, fullTextTotalLength
+            ));
+        }
+
+        if (lineLength != protocolTotalLength) {
+            throw new IllegalArgumentException(format(
+                "The full text specification and the information in the argument object do not match. full text length: %d, @Protocol total length: %d",
+                lineLength, protocolTotalLength
             ));
         }
     }
 
-    private <T> int getDefinedTotalLength(final Class<T> clazz) {
+    private <T> int getProtocolTotalLength(final Class<T> clazz) {
         return stream(clazz.getDeclaredFields())
-            .map(field -> field.getAnnotation(FullText.class))
-            .map(FullText::length)
+            .map(field -> field.getAnnotation(Protocol.class))
+            .map(Protocol::length)
             .reduce(0, Integer::sum);
     }
 
     private <T> T parse(String line, final Class<T> clazz) {
-        final T ele = newInstance(clazz);
-        return isNull(ele) ? null : dataBind(line, clazz, ele);
+        final T type = newInstance(clazz);
+        return isNull(type) ? null : dataBind(line, clazz, type);
     }
 
     private <T> T newInstance(final Class<T> clazz) {
@@ -180,40 +177,40 @@ public final class LineFullTextMapper implements FullTextMapper{
         return defaultConstructor.newInstance();
     }
 
-    private <T> T dataBind(String line, final Class<T> clazz, final T ele) {
+    private <T> T dataBind(String line, final Class<T> clazz, final T type) {
         try {
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
-                int length = field.getAnnotation(FullText.class).length();
+                int length = field.getAnnotation(Protocol.class).length();
                 Class<?> classType = field.getType();
 
                 if (classType.equals(String.class)) {
                     String sliceData = slice(line, length);
-                    field.set(ele, sliceData);
+                    field.set(type, sliceData);
                     line = line.substring(length);
                 } else if (classType.equals(int.class) || classType.equals(Integer.class)) {
                     String sliceData = slice(line, length);
-                    field.set(ele, Integer.valueOf(sliceData));
+                    field.set(type, Integer.valueOf(sliceData));
                     line = line.substring(length);
                 } else if (classType.equals(long.class) || classType.equals(Long.class)) {
                     String sliceData = slice(line, length);
-                    field.set(ele, Long.valueOf(sliceData));
+                    field.set(type, Long.valueOf(sliceData));
                     line = line.substring(length);
                 } else if (classType.equals(double.class) || classType.equals(Double.class)) {
                     String sliceData = slice(line, length);
-                    field.set(ele, Double.valueOf(sliceData));
+                    field.set(type, Double.valueOf(sliceData));
                     line = line.substring(length);
                 } else if (classType.equals(LocalDate.class)) {
                     String sliceData = slice(line, length);
-                    field.set(ele, LocalDate.parse(sliceData, DateTimeFormatter.BASIC_ISO_DATE));
+                    field.set(type, LocalDate.parse(sliceData, DateTimeFormatter.BASIC_ISO_DATE));
                     line = line.substring(length);
                 } else if (classType.equals(LocalDateTime.class)) {
                     String sliceData = slice(line, length);
-                    field.set(ele, LocalDate.parse(sliceData, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+                    field.set(type, LocalDate.parse(sliceData, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
                     line = line.substring(length);
                 } else if (classType.equals(BigDecimal.class)) {
                     String sliceData = slice(line, length);
-                    field.set(ele, new BigDecimal(sliceData));
+                    field.set(type, new BigDecimal(sliceData));
                     line = line.substring(length);
                 }
             }
@@ -221,7 +218,7 @@ public final class LineFullTextMapper implements FullTextMapper{
                 errorLogging("Parsing has been completed. but remaining data exists. current data: " + line);
                 return null;
             }
-            return ele;
+            return type;
         } catch (IllegalAccessException e) {
             errorLogging(e.getMessage());
             return null;
