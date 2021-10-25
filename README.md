@@ -41,7 +41,7 @@
 
 ***이때 `기본생성자`가 반드시 필요하며, `접근제한자`가 `private`이여도 괜찮습니다.***
 
-전문과 매핑될 클래스를 작성하고 `@FullText`를 각 필드에 정의합니다.
+전문과 매핑될 클래스를 작성하고 `@FullText`를 클래스에, `@Protocol`를 각 필드에 정의합니다.
 
 전문의 데이터가 처리되는 시점에 항상 `String` 타입임을 가정하며, 선언된 필드 타입을 기반으로 형변환 매핑합니다.
 
@@ -59,33 +59,34 @@
 <br />
 
 ```java
+@FullText(totalLength = 300)
 public class TestModel {
 
-    @FullText(length = 1)
+    @Protocol(length = 1)
     private String headerType;
 
-    @FullText(length = 8)
-    private LocalDate createAt; // yyyyMMdd
+    @Protocol(length = 8)
+    private LocalDate createAt; // 전문의 데이터를 LocalDate로 형변환하여 바인딩 (현재 yyyyMMdd만 지원)
 
-    @FullText(length = 91)
+    @Protocol(length = 91)
     private String headerPadding;
 
-    @FullText(length = 1)
+    @Protocol(length = 1)
     private String dataType;
 
-    @FullText(length = 10)
+    @Protocol(length = 10)
     private String name;
 
-    @FullText(length = 3)
-    private int age;
+    @Protocol(length = 3)
+    private int age; // 전문의 데이터를 int로 형변환하여 바인딩
 
-    @FullText(length = 86)
+    @Protocol(length = 86)
     private String dataPadding;
 
-    @FullText(length = 1)
+    @Protocol(length = 1)
     private String trailerType;
 
-    @FullText(length = 99)
+    @Protocol(length = 99)
     private String trailerPadding;
 
 }
@@ -93,25 +94,25 @@ public class TestModel {
 
 <br />
 
-`FullTextMapper` 인스턴스를 생성하고 `readValue(String, T)`를 호출합니다.
+`FullTextMapperFactory` 를 통해 `FullTextMapper` 인스턴스를 획득하고 `readValue(String, T)`를 호출합니다.
 
 <br />
 
 ```java
-private FullTextMapper mapper = FullTextMapper.create();
+private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
 Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
 ```
 
 <br />
 
-간단한 테스트 코드는 다음과 같습니다
+현재 작성 된 간단한 테스트 코드는 다음과 같습니다
 
 <br />
 
 ```java
-class FullTextMapperTest {
+class LineFullTextMapperTest {
 
-    private FullTextMapper mapper = FullTextMapper.create();
+    private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
 
     @Test
     void readValue() throws Exception {
