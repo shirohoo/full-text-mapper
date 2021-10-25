@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 
 class LineFullTextMapperTest {
 
-    private LineFullTextMapper mapper = LineFullTextMapper.create();
+    private FullTextMapper mapper = LineFullTextMapper.create();
 
     @Test
-    void readValue() throws Exception {
-        Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
+    void readLine() throws Exception {
+        Optional<TestModel> testModel = mapper.readLine(mockData(), TestModel.class);
         assertThat(testModel.get()).isEqualTo(expectedModel());
     }
 
