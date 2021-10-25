@@ -67,7 +67,7 @@ public final class LineFullTextMapper implements FullTextMapper {
      * @return instance of Optional{@literal <}T>
      */
     public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
-        final String line = convertStr(bytes, getFullText(clazz).encoding());
+        final String line = convertStr(bytes, getAnnotation(clazz).encoding());
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
     }
@@ -81,7 +81,7 @@ public final class LineFullTextMapper implements FullTextMapper {
         }
     }
 
-    private <T> FullText getFullText(final Class<T> clazz) {
+    private <T> FullText getAnnotation(final Class<T> clazz) {
         final FullText annotation = clazz.getAnnotation(FullText.class);
         if (isNull(annotation)) {
             throw new NoSuchElementException("Could not find @FullText in argument object. please add @FullText at class level.");
@@ -127,8 +127,8 @@ public final class LineFullTextMapper implements FullTextMapper {
     private <T> void verifyAnnotation(final Class<T> clazz) {
         Objects.requireNonNull(clazz, "clazz is must not be null.");
 
-        final int fullTextTotalLen = getFullText(clazz).length();
-        final int protocolTotalLen = getProtocolTotalLength(clazz);
+        final int fullTextTotalLen = getAnnotation(clazz).length();
+        final int protocolTotalLen = protocolLengths(clazz);
 
         if (fullTextTotalLen != protocolTotalLen) {
             throw new IllegalArgumentException(format(
@@ -138,16 +138,25 @@ public final class LineFullTextMapper implements FullTextMapper {
         }
     }
 
-    private <T> int getProtocolTotalLength(final Class<T> clazz) {
+    private <T> int protocolLengths(final Class<T> clazz) {
         return stream(clazz.getDeclaredFields())
-            .map(field -> field.getAnnotation(Protocol.class))
+            .map(this::getAnnotation)
+            .filter(Objects::nonNull)
             .map(Protocol::length)
             .reduce(0, Integer::sum);
     }
 
+    private Protocol getAnnotation(final Field field) {
+        Protocol annotation = field.getAnnotation(Protocol.class);
+        if (isNull(annotation)) {
+            throw new NoSuchElementException("Could not find @Protocol in argument object. please add @Protocol at field level.");
+        }
+        return annotation;
+    }
+
     private <T> T parse(String line, final Class<T> clazz) {
         final T instance = newInstance(clazz);
-        return isNull(instance) ? null : getInstance(line, clazz, instance);
+        return isNull(instance) ? null : setInstance(line, clazz, instance);
     }
 
     private <T> T newInstance(final Class<T> clazz) {
@@ -165,7 +174,7 @@ public final class LineFullTextMapper implements FullTextMapper {
         return defaultConstructor.newInstance();
     }
 
-    private <T> T getInstance(String line, final Class<T> clazz, final T instance) {
+    private <T> T setInstance(String line, final Class<T> clazz, final T instance) {
         try {
             for (Field field : clazz.getDeclaredFields()) {
                 line = dataBind(line, instance, field);
@@ -182,8 +191,8 @@ public final class LineFullTextMapper implements FullTextMapper {
 
 
     private <T> String dataBind(String data, final T instance, final Field field) throws IllegalAccessException {
-        final Protocol annotation = field.getAnnotation(Protocol.class);
-        final int length = annotation.length();
+        final Protocol protocol = getAnnotation(field);
+        final int length = protocol.length();
 
         field.setAccessible(true);
 
@@ -208,40 +217,45 @@ public final class LineFullTextMapper implements FullTextMapper {
     @Override
     public String write(final Object object) throws IllegalAccessException {
         final Class<?> clazz = object.getClass();
+        final String padChar = padChar(clazz);
         verifyAnnotation(clazz);
 
-        final String padChar = getPadChar(clazz);
         String data = "";
-
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
-            Protocol protocol = field.getAnnotation(Protocol.class);
             Object o = field.get(object);
-            int totalLen = protocol.length();
-            int dataLen = o.toString().length();
-            int padLen = totalLen - dataLen;
+            int padLen = padLen(getAnnotation(field), o);
 
-            String pad = getPad(padChar, padLen);
             if (o.getClass().equals(LocalDate.class)) {
                 String string = ((LocalDate) o).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-                data += pad + string;
+                data += leftPad(string, pad(padChar, padLen));
             } else {
-                data += pad + o.toString();
+                data += leftPad(o.toString(), pad(padChar, padLen));
             }
         }
         return data;
     }
 
-    private String getPad(final String padChar, final int padLen) {
+    private int padLen(final Protocol protocol, final Object o) {
+        int totalLen = protocol.length();
+        int dataLen = o.toString().length();
+        return totalLen - dataLen;
+    }
+
+    private String leftPad(final String data, final String pad) {
+        return pad + data;
+    }
+
+    private String pad(final String padChar, final int len) {
         String pad = "";
-        for (int i = 0; i < padLen; i++) {
+        for (int i = 0; i < len; i++) {
             pad += padChar;
         }
         return pad;
     }
 
-    private String getPadChar(final Class<?> clazz) {
-        FullText fullText = clazz.getAnnotation(FullText.class);
+    private String padChar(final Class<?> clazz) {
+        FullText fullText = getAnnotation(clazz);
         return PadCharacter.findBy(fullText.padChar());
     }
 
