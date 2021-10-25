@@ -11,8 +11,8 @@ class LineFullTextMapperTest {
     private FullTextMapper mapper = LineFullTextMapper.create();
 
     @Test
-    void readLine() throws Exception {
-        Optional<TestModel> testModel = mapper.readLine(mockData(), TestModel.class);
+    void readValue() throws Exception {
+        Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
         assertThat(testModel.get()).isEqualTo(expectedModel());
     }
 

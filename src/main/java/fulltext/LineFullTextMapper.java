@@ -95,7 +95,7 @@ public final class LineFullTextMapper implements FullTextMapper{
      * @param clazz 전문에서 읽어온 데이터를 바인딩하여 인스턴스화할 클래스입니다. A class to instantiate by binding data read from the full text.
      * @return
      */
-    public <T> Optional<T> readLine(final byte[] bytes, final Class<T> clazz) {
+    public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
         final String line = convertStr(bytes);
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
@@ -126,7 +126,7 @@ public final class LineFullTextMapper implements FullTextMapper{
      * @param clazz 전문에서 읽어온 데이터를 바인딩하여 인스턴스화할 클래스입니다. A class to instantiate by binding data read from the full text.
      * @return
      */
-    public <T> Optional<T> readLine(final String line, final Class<T> clazz) {
+    public <T> Optional<T> readValue(final String line, final Class<T> clazz) {
         verify(line, clazz);
         return Optional.ofNullable(parse(line, clazz));
     }
