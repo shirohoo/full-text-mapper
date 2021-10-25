@@ -158,8 +158,8 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     private <T> T parse(String line, final Class<T> clazz) {
-        final T type = newInstance(clazz);
-        return isNull(type) ? null : dataBind(line, clazz, type);
+        final T instance = newInstance(clazz);
+        return isNull(instance) ? null : getInstance(line, clazz, instance);
     }
 
     private <T> T newInstance(final Class<T> clazz) {
@@ -177,52 +177,54 @@ public final class LineFullTextMapper implements FullTextMapper {
         return defaultConstructor.newInstance();
     }
 
-    private <T> T dataBind(String line, final Class<T> clazz, final T type) {
+    private <T> T getInstance(String line, final Class<T> clazz, final T instance) {
         try {
             for (Field field : clazz.getDeclaredFields()) {
-                line = dataBind(line, type, field);
+                line = dataBind(line, instance, field);
             }
             if (line.length() != 0) {
                 throw new IllegalArgumentException("Parsing has been completed. but remaining data exists. current data: " + line);
             }
-            return type;
+            return instance;
         } catch (IllegalAccessException e) {
             errorLogging(e.getMessage());
             return null;
         }
     }
 
-    private <T> String dataBind(String line, final T type, final Field field) throws IllegalAccessException {
-        field.setAccessible(true);
-        final Class<?> classType = field.getType();
+    private <T> String dataBind(String line, final T instance, final Field field) throws IllegalAccessException {
+        final Class<?> fieldType = field.getType();
         int length = field.getAnnotation(Protocol.class).length();
-        if (classType.equals(String.class)) {
-            String sliceData = slice(line, length);
-            field.set(type, sliceData);
+
+        field.setAccessible(true);
+
+        if (fieldType.equals(String.class)) {
+            String data = slice(line, length);
+            field.set(instance, data);
             line = line.substring(length);
-        } else if (classType.equals(int.class) || classType.equals(Integer.class)) {
-            String sliceData = slice(line, length);
-            field.set(type, Integer.valueOf(sliceData));
+        } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+            String data = slice(line, length);
+            field.set(instance, Integer.valueOf(data));
             line = line.substring(length);
-        } else if (classType.equals(long.class) || classType.equals(Long.class)) {
-            String sliceData = slice(line, length);
-            field.set(type, Long.valueOf(sliceData));
+        } else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
+            String data = slice(line, length);
+            field.set(instance, Long.valueOf(data));
             line = line.substring(length);
-        } else if (classType.equals(double.class) || classType.equals(Double.class)) {
-            String sliceData = slice(line, length);
-            field.set(type, Double.valueOf(sliceData));
+        } else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
+            String data = slice(line, length);
+            field.set(instance, Double.valueOf(data));
             line = line.substring(length);
-        } else if (classType.equals(LocalDate.class)) {
-            String sliceData = slice(line, length);
-            field.set(type, LocalDate.parse(sliceData, DateTimeFormatter.BASIC_ISO_DATE));
+        } else if (fieldType.equals(LocalDate.class)) {
+            String data = slice(line, length);
+            field.set(instance, LocalDate.parse(data, DateTimeFormatter.BASIC_ISO_DATE));
             line = line.substring(length);
-        } else if (classType.equals(LocalDateTime.class)) {
-            String sliceData = slice(line, length);
-            field.set(type, LocalDate.parse(sliceData, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+        } else if (fieldType.equals(LocalDateTime.class)) {
+            String data = slice(line, length);
+            field.set(instance, LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
             line = line.substring(length);
-        } else if (classType.equals(BigDecimal.class)) {
-            String sliceData = slice(line, length);
-            field.set(type, new BigDecimal(sliceData));
+        } else if (fieldType.equals(BigDecimal.class)) {
+            String data = slice(line, length);
+            field.set(instance, new BigDecimal(data));
             line = line.substring(length);
         }
         return line;
