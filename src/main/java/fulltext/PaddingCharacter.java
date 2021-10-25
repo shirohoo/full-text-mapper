@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum PaddingCharacter {
+    NONE(""),
     SPACE(" "),
     ZERO("0");
 
