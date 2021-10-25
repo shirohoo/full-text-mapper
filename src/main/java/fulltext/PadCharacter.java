@@ -6,15 +6,15 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public enum PaddingCharacter {
+public enum PadCharacter {
     SPACE(" ");
 
-    private static final Map<PaddingCharacter, String> MAP = stream(values())
-        .collect(Collectors.toUnmodifiableMap(Function.identity(), PaddingCharacter::getCharacter));
+    private static final Map<PadCharacter, String> MAP = stream(values())
+        .collect(Collectors.toUnmodifiableMap(Function.identity(), PadCharacter::getCharacter));
 
     private final String character;
 
-    PaddingCharacter(final String character) {
+    PadCharacter(final String character) {
         this.character = character;
     }
 
@@ -22,7 +22,7 @@ public enum PaddingCharacter {
         return character;
     }
 
-    public static String findBy(final PaddingCharacter charset) {
+    public static String findBy(final PadCharacter charset) {
         if (!MAP.containsKey(charset)) {
             throw new NoSuchElementException();
         }

@@ -8,4 +8,6 @@ public interface FullTextMapper {
 
     <T> Optional<T> readValue(final byte[] data, final Class<T> clazz);
 
+    String write(final Object object) throws IllegalAccessException;
+
 }

@@ -3,7 +3,7 @@ package fulltext;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@FullText(totalLength = 300)
+@FullText(length = 300)
 public class TestModel {
 
     @Protocol(length = 1)

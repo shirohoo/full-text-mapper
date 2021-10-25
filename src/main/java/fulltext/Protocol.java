@@ -28,6 +28,6 @@ public @interface Protocol {
      * <p>
      * Indicates whether the field is for padding only.
      */
-    boolean paddingOnly() default false;
+    boolean padOnly() default false;
 
 }

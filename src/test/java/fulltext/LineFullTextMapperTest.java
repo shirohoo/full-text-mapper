@@ -1,6 +1,7 @@
 package fulltext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -34,6 +35,12 @@ class LineFullTextMapperTest {
             .trailerType("3")
             .trailerPadding("")
             .build();
+    }
+
+    @Test
+    void write() throws Exception {
+        String write = mapper.write(expectedModel());
+        System.out.println("write = " + write);
     }
 
 }

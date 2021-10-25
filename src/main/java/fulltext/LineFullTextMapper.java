@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -119,30 +121,19 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private <T> void verify(final String line, final Class<T> clazz) {
         Objects.requireNonNull(line, "line is must not be null.");
+        verifyAnnotation(clazz);
+    }
+
+    private <T> void verifyAnnotation(final Class<T> clazz) {
         Objects.requireNonNull(clazz, "clazz is must not be null.");
 
-        final int lineLength = line.length();
-        final int fullTextTotalLength = getFullText(clazz).totalLength();
-        final int protocolTotalLength = getProtocolTotalLength(clazz);
+        final int fullTextTotalLen = getFullText(clazz).length();
+        final int protocolTotalLen = getProtocolTotalLength(clazz);
 
-        if (fullTextTotalLength != protocolTotalLength) {
+        if (fullTextTotalLen != protocolTotalLen) {
             throw new IllegalArgumentException(format(
                 "There is a problem with setting the full text object. @FullText: %d, @Protocol total length: %d",
-                fullTextTotalLength, protocolTotalLength
-            ));
-        }
-
-        if (lineLength != fullTextTotalLength) {
-            throw new IllegalArgumentException(format(
-                "The full text specification and the information in the argument object do not match. full text length: %d, @FullText length: %d",
-                lineLength, fullTextTotalLength
-            ));
-        }
-
-        if (lineLength != protocolTotalLength) {
-            throw new IllegalArgumentException(format(
-                "The full text specification and the information in the argument object do not match. full text length: %d, @Protocol total length: %d",
-                lineLength, protocolTotalLength
+                fullTextTotalLen, protocolTotalLen
             ));
         }
     }
@@ -190,7 +181,7 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
 
-    private <T> String dataBind(String line, final T instance, final Field field) throws IllegalAccessException {
+    private <T> String dataBind(String data, final T instance, final Field field) throws IllegalAccessException {
         final Protocol annotation = field.getAnnotation(Protocol.class);
         final int length = annotation.length();
 
@@ -199,16 +190,15 @@ public final class LineFullTextMapper implements FullTextMapper {
         for (JavaType javaType : JavaType.values()) {
             if (field.getType().equals(javaType.getClazz())) {
                 Function<String, ?> typeCasting = javaType.getFunction();
-                String data = slice(line, length);
-                field.set(instance, typeCasting.apply(data));
-                line = line.substring(length);
+                field.set(instance, typeCasting.apply(slice(data, length)));
+                data = data.substring(length);
             }
         }
-        return line;
+        return data;
     }
 
-    private String slice(final String line, final int length) {
-        return line.substring(0, length).trim();
+    private String slice(final String data, final int len) {
+        return data.substring(0, len).trim();
     }
 
     private void errorLogging(final String message) {

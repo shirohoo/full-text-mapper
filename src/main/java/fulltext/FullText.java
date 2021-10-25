@@ -21,7 +21,7 @@ public @interface FullText {
      * <p>
      * Means the total length of one line in full text.
      */
-    int totalLength();
+    int length();
 
     /**
      * 전문을 어떤 방식으로 인코딩할지 설정합니다. 기본값은 UTF-8입니다.
@@ -35,6 +35,6 @@ public @interface FullText {
      * <p>
      * Sets the padding character to be used in full text. The default is a space character(" ").
      */
-    PaddingCharacter paddingChar() default PaddingCharacter.SPACE;
+    PadCharacter padChar() default PadCharacter.SPACE;
 
 }
