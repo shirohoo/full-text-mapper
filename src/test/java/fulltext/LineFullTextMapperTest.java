@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-class FullTextMapperTest {
+class LineFullTextMapperTest {
 
-    private FullTextMapper mapper = FullTextMapper.create();
+    private LineFullTextMapper mapper = LineFullTextMapper.create();
 
     @Test
     void readValue() throws Exception {

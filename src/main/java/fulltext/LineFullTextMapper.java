@@ -16,13 +16,13 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
- * {@link FullTextMapper} 는 전문과 객체를 서로 매핑합니다.
+ * {@link LineFullTextMapper} 는 전문과 객체를 서로 매핑합니다.
  * <p>
  * 사용하기 위해서는 매핑하려는 Object에 @FullText가 알맞게 선언돼있어야 합니다.
  * <p>
  * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} must be properly declared in the object to be mapped.
  */
-public final class FullTextMapper {
+public final class LineFullTextMapper {
 
     private final static Logger log = Logger.getGlobal();
 
@@ -41,11 +41,11 @@ public final class FullTextMapper {
      *
      * @return instance of fulltext.FullTextMapper
      */
-    public static FullTextMapper create() {
-        return new FullTextMapper();
+    public static LineFullTextMapper create() {
+        return new LineFullTextMapper();
     }
 
-    private FullTextMapper() {
+    private LineFullTextMapper() {
         this(Charset.UTF_8);
     }
 
@@ -62,11 +62,11 @@ public final class FullTextMapper {
      *
      * @return instance of fulltext.FullTextMapper
      */
-    public static FullTextMapper create(final Charset encode) {
-        return new FullTextMapper(encode);
+    public static LineFullTextMapper create(final Charset encode) {
+        return new LineFullTextMapper(encode);
     }
 
-    private FullTextMapper(final Charset encoder) {
+    private LineFullTextMapper(final Charset encoder) {
         this.encoder = encoder;
     }
 

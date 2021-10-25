@@ -7,9 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@link FullTextMapper}는 이 어노테이션을 참조하여 전문과 객체를 매핑합니다.
+ * {@link LineFullTextMapper}는 이 어노테이션을 참조하여 전문과 객체를 매핑합니다.
  * <p>
- * {@link FullTextMapper} references this annotation to map full text and objects.
+ * {@link LineFullTextMapper} references this annotation to map full text and objects.
  */
 @Documented
 @Target(ElementType.FIELD)
