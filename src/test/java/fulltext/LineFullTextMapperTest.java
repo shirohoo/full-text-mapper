@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-class LineProtocolMapperTest {
+class LineFullTextMapperTest {
 
     private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
 
