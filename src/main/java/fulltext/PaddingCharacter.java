@@ -7,9 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum PaddingCharacter {
-    NONE(""),
-    SPACE(" "),
-    ZERO("0");
+    SPACE(" ");
 
     private static final Map<PaddingCharacter, String> MAP = stream(values())
         .collect(Collectors.toUnmodifiableMap(Function.identity(), PaddingCharacter::getCharacter));
