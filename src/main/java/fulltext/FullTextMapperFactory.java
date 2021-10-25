@@ -11,7 +11,7 @@ public class FullTextMapperFactory {
 
     private static class LineFullTextMapperHolder {
 
-        private static final FullTextMapper instance = LineFullTextMapper.create();
+        private static final FullTextMapper instance = LineFullTextMapper.newInstance();
 
     }
 
