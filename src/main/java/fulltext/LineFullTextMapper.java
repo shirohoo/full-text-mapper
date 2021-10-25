@@ -205,4 +205,44 @@ public final class LineFullTextMapper implements FullTextMapper {
         log.severe(message + ". returned null.");
     }
 
+    @Override
+    public String write(final Object object) throws IllegalAccessException {
+        final Class<?> clazz = object.getClass();
+        verifyAnnotation(clazz);
+
+        final String padChar = getPadChar(clazz);
+        String data = "";
+
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            Protocol protocol = field.getAnnotation(Protocol.class);
+            Object o = field.get(object);
+            int totalLen = protocol.length();
+            int dataLen = o.toString().length();
+            int padLen = totalLen - dataLen;
+
+            String pad = getPad(padChar, padLen);
+            if (o.getClass().equals(LocalDate.class)) {
+                String string = ((LocalDate) o).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                data += pad + string;
+            } else {
+                data += pad + o.toString();
+            }
+        }
+        return data;
+    }
+
+    private String getPad(final String padChar, final int padLen) {
+        String pad = "";
+        for (int i = 0; i < padLen; i++) {
+            pad += padChar;
+        }
+        return pad;
+    }
+
+    private String getPadChar(final Class<?> clazz) {
+        FullText fullText = clazz.getAnnotation(FullText.class);
+        return PadCharacter.findBy(fullText.padChar());
+    }
+
 }
