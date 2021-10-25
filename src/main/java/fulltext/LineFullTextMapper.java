@@ -7,13 +7,10 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 /**
@@ -192,40 +189,20 @@ public final class LineFullTextMapper implements FullTextMapper {
         }
     }
 
+
     private <T> String dataBind(String line, final T instance, final Field field) throws IllegalAccessException {
-        final Class<?> fieldType = field.getType();
-        int length = field.getAnnotation(Protocol.class).length();
+        final Protocol annotation = field.getAnnotation(Protocol.class);
+        final int length = annotation.length();
 
         field.setAccessible(true);
 
-        if (fieldType.equals(String.class)) {
-            String data = slice(line, length);
-            field.set(instance, data);
-            line = line.substring(length);
-        } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
-            String data = slice(line, length);
-            field.set(instance, Integer.valueOf(data));
-            line = line.substring(length);
-        } else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
-            String data = slice(line, length);
-            field.set(instance, Long.valueOf(data));
-            line = line.substring(length);
-        } else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
-            String data = slice(line, length);
-            field.set(instance, Double.valueOf(data));
-            line = line.substring(length);
-        } else if (fieldType.equals(LocalDate.class)) {
-            String data = slice(line, length);
-            field.set(instance, LocalDate.parse(data, DateTimeFormatter.BASIC_ISO_DATE));
-            line = line.substring(length);
-        } else if (fieldType.equals(LocalDateTime.class)) {
-            String data = slice(line, length);
-            field.set(instance, LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
-            line = line.substring(length);
-        } else if (fieldType.equals(BigDecimal.class)) {
-            String data = slice(line, length);
-            field.set(instance, new BigDecimal(data));
-            line = line.substring(length);
+        for (JavaType javaType : JavaType.values()) {
+            if (field.getType().equals(javaType.getClazz())) {
+                Function<String, ?> typeCasting = javaType.getFunction();
+                String data = slice(line, length);
+                field.set(instance, typeCasting.apply(data));
+                line = line.substring(length);
+            }
         }
         return line;
     }
