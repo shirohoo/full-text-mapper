@@ -3,33 +3,34 @@ package fulltext;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@FullText(totalLength = 300)
 public class TestModel {
 
-    @FullText(length = 1)
+    @Protocol(length = 1)
     private String headerType;
 
-    @FullText(length = 8)
+    @Protocol(length = 8)
     private LocalDate createAt; // yyyyMMdd
 
-    @FullText(length = 91)
+    @Protocol(length = 91)
     private String headerPadding;
 
-    @FullText(length = 1)
+    @Protocol(length = 1)
     private String dataType;
 
-    @FullText(length = 10)
+    @Protocol(length = 10)
     private String name;
 
-    @FullText(length = 3)
+    @Protocol(length = 3)
     private int age;
 
-    @FullText(length = 86)
+    @Protocol(length = 86)
     private String dataPadding;
 
-    @FullText(length = 1)
+    @Protocol(length = 1)
     private String trailerType;
 
-    @FullText(length = 99)
+    @Protocol(length = 99)
     private String trailerPadding;
 
     private TestModel() {
