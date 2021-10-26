@@ -1,5 +1,6 @@
 package fulltext;
 
+import static java.lang.Math.max;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Objects.isNull;
@@ -8,6 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -210,36 +212,35 @@ public final class LineFullTextMapper implements FullTextMapper {
         return data.substring(0, len).trim();
     }
 
-    private void errorLogging(final String message) {
-        log.severe(message + ". returned null.");
-    }
-
     @Override
     public String write(final Object object) throws IllegalAccessException {
         final Class<?> clazz = object.getClass();
         final String padChar = padChar(clazz);
         verifyAnnotation(clazz);
 
-        String data = "";
-        for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            Object o = field.get(object);
-            int padLen = padLen(getAnnotation(field), o);
+        StringBuilder builder = new StringBuilder();
+        for (Field declaredField : clazz.getDeclaredFields()) {
+            declaredField.setAccessible(true);
+            Object field = declaredField.get(object);
+            int padLen = padLen(getAnnotation(declaredField), field);
 
-            if (o.getClass().equals(LocalDate.class)) {
-                String string = ((LocalDate) o).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-                data += leftPad(string, pad(padChar, padLen));
+            Class<?> fieldClass = field.getClass();
+            if (fieldClass.equals(LocalDate.class)) {
+                String data = ((LocalDate) field).format(DateTimeFormatter.BASIC_ISO_DATE);
+                builder.append(leftPad(data, pad(padChar, padLen)));
+            } else if (fieldClass.equals(LocalDateTime.class)) {
+                String data = ((LocalDateTime) field).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                builder.append(leftPad(data, pad(padChar, padLen)));
             } else {
-                data += leftPad(o.toString(), pad(padChar, padLen));
+                String data = field.toString();
+                builder.append(leftPad(data, pad(padChar, padLen)));
             }
         }
-        return data;
+        return builder.toString();
     }
 
-    private int padLen(final Protocol protocol, final Object o) {
-        int totalLen = protocol.length();
-        int dataLen = o.toString().length();
-        return totalLen - dataLen;
+    private int padLen(final Protocol protocol, final Object data) {
+        return protocol.length() - data.toString().length();
     }
 
     private String leftPad(final String data, final String pad) {
@@ -247,16 +248,17 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     private String pad(final String padChar, final int len) {
-        String pad = "";
-        for (int i = 0; i < len; i++) {
-            pad += padChar;
-        }
-        return pad;
+        return new StringBuilder()
+            .append(padChar.repeat(max(0, len)))
+            .toString();
     }
 
     private String padChar(final Class<?> clazz) {
-        FullText fullText = getAnnotation(clazz);
-        return PadCharacter.findBy(fullText.padChar());
+        return PadCharacter.findBy(getAnnotation(clazz).padChar());
+    }
+
+    private void errorLogging(final String message) {
+        log.severe(message + ". returned null.");
     }
 
 }
