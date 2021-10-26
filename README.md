@@ -37,6 +37,30 @@
 
 # ⚙ 사용 방법
 
+## 📜 Maven
+```xml
+<!--pom.xml-->
+<dependency>
+  <groupId>io.github.shirohoo</groupId>
+  <artifactId>full-text-mapper</artifactId>
+  <version>1.0</version>
+</dependency>
+```
+
+## 📜 Gradle
+```groovy
+// build.gradle
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.shirohoo:full-text-mapper:1.0'
+}
+```
+
+<br />
+
 기본적으로 전문 한줄과 객체 하나가 일대일로 매핑됩니다.
 
 ***이때 `기본생성자`가 반드시 필요하며, `접근제한자`가 `private`이여도 괜찮습니다.***

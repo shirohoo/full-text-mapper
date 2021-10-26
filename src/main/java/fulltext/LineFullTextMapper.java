@@ -49,7 +49,7 @@ public final class LineFullTextMapper implements FullTextMapper {
      *
      * @param bytes Byte array type data read from the full text.
      * @param clazz A class to instantiate by binding data read from the full text.
-     * @return instance of Optional{@literal <}T>
+     * @return instance of Optional{@literal <}T {@literal >}
      */
     public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
         final String line = convertStr(bytes, getAnnotation(clazz).encoding());
@@ -86,7 +86,7 @@ public final class LineFullTextMapper implements FullTextMapper {
      *
      * @param line  String type data read from the full text.
      * @param clazz A class to instantiate by binding data read from the full text.
-     * @return instance of Optional{@literal <}T>
+     * @return instance of Optional{@literal <}T {@literal >}
      */
     public <T> Optional<T> readValue(final String line, final Class<T> clazz) {
         verify(line, clazz);

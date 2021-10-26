@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'maven'
+    id 'signing'
 }
 
 group = 'io.github.shirohoo'
@@ -24,4 +26,66 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+signing {
+    sign configurations.archives
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'full-text-mapper'
+                packaging 'jar'
+                description 'ObejctMapper for Full-Text communication'
+                url 'https://github.com/shirohoo/full-text-mapper'
+
+                scm {
+                    connection 'https://github.com/shirohoo/full-text-mapper'
+                    developerConnection 'https://shirohoo.github.io/'
+                    url 'https://github.com/shirohoo/full-text-mapper'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'shirohoo'
+                        name 'Changhun Han'
+                        email 'shirohoo4102@gmail.com'
+                    }
+                }
+            }
+        }
+    }
 }
