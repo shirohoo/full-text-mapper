@@ -151,7 +151,7 @@ public final class LineFullTextMapper implements FullTextMapper {
     private <T> T setInstance(String line, final Class<T> clazz, final T instance) {
         try {
             for (Field field : clazz.getDeclaredFields()) {
-                line = dataBind(line, instance, field);
+                line = dataBind(line, instance, field, getAnnotation(clazz).padChar());
             }
             if (line.length() != 0) {
                 throw new IllegalArgumentException("Parsing has been completed. but remaining data exists. current data: " + line);
@@ -164,7 +164,7 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
 
-    private <T> String dataBind(String data, final T instance, final Field field) throws IllegalAccessException {
+    private <T> String dataBind(String data, final T instance, final Field field, final PadCharacter padCharacter) throws IllegalAccessException {
         final Protocol protocol = getAnnotation(field);
         final int length = protocol.length();
 
@@ -173,15 +173,15 @@ public final class LineFullTextMapper implements FullTextMapper {
         for (JavaType javaType : JavaType.values()) {
             if (field.getType().equals(javaType.getClazz())) {
                 Function<String, ?> typeCasting = javaType.getFunction();
-                field.set(instance, typeCasting.apply(slice(data, length)));
+                field.set(instance, typeCasting.apply(slice(data, length, padCharacter)));
                 data = data.substring(length);
             }
         }
         return data;
     }
 
-    private String slice(final String data, final int len) {
-        return data.substring(0, len).trim();
+    private String slice(final String data, final int len, final PadCharacter padCharacter) {
+        return padCharacter.removeLeftPad(data.substring(0, len));
     }
 
     @Override
