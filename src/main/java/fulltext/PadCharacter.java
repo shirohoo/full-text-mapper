@@ -34,6 +34,6 @@ public enum PadCharacter {
     }
 
     public String removeLeftPad(final String data) {
-        return data.replaceFirst("^" + character + "+(?!$)", "");
+        return data.replaceFirst("^" + character + "*", "");
     }
 }
