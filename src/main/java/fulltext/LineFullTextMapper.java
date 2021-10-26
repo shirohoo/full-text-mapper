@@ -18,9 +18,6 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 /**
- * {@link LineFullTextMapper} 는 전문과 객체를 서로 매핑합니다.
- * <p>
- * 사용하기 위해서는 매핑하려는 Object에 @FullText와 @Protocol이 알맞게 선언돼있어야 합니다.
  * <p>
  * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Protocol} must be properly declared in the object to be mapped.
  */
@@ -29,8 +26,6 @@ public final class LineFullTextMapper implements FullTextMapper {
     private final static Logger log = Logger.getGlobal();
 
     /**
-     * 이 정적 팩토리 메소드는 기본 생성자를 호출합니다.
-     * <p>
      * This static factory method is invoked default constructor.
      * <p>
      *
@@ -44,28 +39,17 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     /**
-     * 바이트 배열로 구성된 전문을 지정된 인코더로 인코딩 한 후, 전달받은 객체의 각 필드에 바인딩 합니다.
-     * <p>
      * After encoding the full text composed of a byte array with the specified encoder, it is binding to each field of the received object.
-     * <p>
-     * <p>
-     * 이 때 각 필드의 선언 타입에 따라 전문의 데이터를 형변환하여 바인딩합니다.
      * <p>
      * At this time, the data of the full text is converted and binding to the declaration type of each field.
      * <p>
-     * <p>
-     * 데이터 바인딩이 문제없이 완료되면 생성된 인스턴스를 반환합니다.
-     * <p>
      * If data binding completes without any problems, return the created instance.
-     * <p>
-     * <p>
-     * 몇가지 예외가 발생할 수 있지만, 예외가 발생 할 경우 항상 에러 로그와 함께 Optional을 반환합니다.
      * <p>
      * Several exceptions may occur, but when an exception occurs, an Optional is always returned with an error log.
      * <p>
      *
-     * @param bytes 전문에서 읽어온 바이트 배열 타입의 데이터입니다. Byte array type data read from the full text.
-     * @param clazz 전문에서 읽어온 데이터를 바인딩하여 인스턴스화할 클래스입니다. A class to instantiate by binding data read from the full text.
+     * @param bytes Byte array type data read from the full text.
+     * @param clazz A class to instantiate by binding data read from the full text.
      * @return instance of Optional{@literal <}T>
      */
     public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
@@ -92,28 +76,17 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     /**
-     * 전달받은 객체의 인스턴스를 생성하고, 전문을 읽어들여 생성한 인스턴스의 각 필드에 바인딩합니다.
-     * <p>
      * Creates an instance of the received object, reads the full text, and binds it to each field of the created instance.
-     * <p>
-     * <p>
-     * 이 때 각 필드의 선언 타입에 따라 전문의 데이터를 형변환하여 바인딩합니다.
      * <p>
      * At this time, the data of the full text is converted and binding to the declaration type of each field.
      * <p>
-     * <p>
-     * 데이터 바인딩이 문제없이 완료되면 생성된 인스턴스를 반환합니다.
-     * <p>
      * If data binding completes without any problems, return the created instance.
-     * <p>
-     * <p>
-     * 몇가지 예외가 발생할 수 있지만, 예외가 발생 할 경우 로그를 남기고 항상 Optional을 반환합니다.
      * <p>
      * Several exceptions may occur, but when an exception occurs, it logs and always returns Optional.
      * <p>
      *
-     * @param line  전문에서 읽어온 문자열 타입의 데이터입니다. String type data read from the full text.
-     * @param clazz 전문에서 읽어온 데이터를 바인딩하여 인스턴스화할 클래스입니다. A class to instantiate by binding data read from the full text.
+     * @param line  String type data read from the full text.
+     * @param clazz A class to instantiate by binding data read from the full text.
      * @return instance of Optional{@literal <}T>
      */
     public <T> Optional<T> readValue(final String line, final Class<T> clazz) {
@@ -213,7 +186,7 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     @Override
-    public String write(final Object object) throws IllegalAccessException {
+    public String write(final Object object) {
         final Class<?> clazz = object.getClass();
         final String padChar = padChar(clazz);
         verifyAnnotation(clazz);
@@ -221,7 +194,7 @@ public final class LineFullTextMapper implements FullTextMapper {
         StringBuilder builder = new StringBuilder();
         for (Field declaredField : clazz.getDeclaredFields()) {
             declaredField.setAccessible(true);
-            Object field = declaredField.get(object);
+            Object field = getField(object, declaredField);
             int padLen = padLen(getAnnotation(declaredField), field);
 
             Class<?> fieldClass = field.getClass();
@@ -237,6 +210,17 @@ public final class LineFullTextMapper implements FullTextMapper {
             }
         }
         return builder.toString();
+    }
+
+    private Object getField(final Object object, final Field declaredField) {
+        Object field = null;
+        try {
+            field = declaredField.get(object);
+        } catch (IllegalAccessException e) {
+            // I'm sure it will never happen. so didn't do anything.
+            // because setAccessible(true).
+        }
+        return field;
     }
 
     private int padLen(final Protocol protocol, final Object data) {
