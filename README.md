@@ -94,6 +94,8 @@ public class TestModel {
 
 <br />
 
+## 📌 읽기
+
 `FullTextMapperFactory` 를 통해 `FullTextMapper` 인스턴스를 획득하고 `readValue(String, T)`를 호출합니다.
 
 <br />
@@ -124,6 +126,58 @@ class LineFullTextMapperTest {
         return "120211011                                                                                           " +
             "2      siro 28                                                                                      " +
             "3                                                                                                   ";
+    }
+
+    private TestModel expectedModel() {
+        return TestModel.builder()
+            .headerType("1")
+            .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
+            .headerPadding("")
+            .dataType("2")
+            .name("siro")
+            .age(28)
+            .dataPadding("")
+            .trailerType("3")
+            .trailerPadding("")
+            .build();
+    }
+
+}
+```
+
+<br />
+
+## 📌 쓰기
+
+`FullTextMapperFactory` 를 통해 `FullTextMapper` 인스턴스를 획득하고 `write(Object)`를 호출합니다.
+
+<br />
+
+```java
+private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+String actual = mapper.write(expectedModel());
+```
+
+<br />
+
+현재 작성 된 간단한 테스트 코드는 다음과 같습니다
+
+<br />
+
+```java
+class LineFullTextMapperTest {
+
+    private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+
+    @Test
+    void write() throws Exception {
+        String actual = mapper.write(expectedModel());
+        assertThat(actual).isEqualTo(
+            "120211011                                                                                           "
+                + "2      siro 28                                                                                "
+                + "      3                                                                                       "
+                + "            "
+        );
     }
 
     private TestModel expectedModel() {
