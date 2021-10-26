@@ -63,11 +63,13 @@ dependencies {
 
 기본적으로 전문 한줄과 객체 하나가 일대일로 매핑됩니다.
 
-***이때 `기본생성자`가 반드시 필요하며, `접근제한자`가 `private`이여도 괜찮습니다.***
+**이때 `기본생성자`가 반드시 필요하며, `접근제한자`는 `private`이여도 괜찮습니다.**
 
 전문과 매핑될 클래스를 작성하고 `@FullText`를 클래스 레벨에, `@Length`를 필드 레벨에 정의합니다.
 
-전문의 데이터가 처리되는 시점에 항상 `String` 타입임을 가정하며, 선언된 필드 타입을 기반으로 형변환 매핑합니다.
+전문과 매핑할 클래스의 필드 타입을 기반으로 형변환 매핑합니다.
+
+예를 클래스의 필드를 `private int age;` 라고 선언하였고 전문에서 `0038` 이라는 값을 읽어왔다면 `int` 타입의 `38`로 형변환되어 됩니다.
 
 현재 지원되는 타입은 다음과 같습니다.
 
@@ -142,7 +144,7 @@ public class TestModel {
 <br />
 
 ```java
-private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
 Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
 ```
 
@@ -195,8 +197,8 @@ class LineFullTextMapperTest {
 <br />
 
 ```java
-private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
-String actual = mapper.write(expectedModel());
+FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+String fullText = mapper.write(expectedModel());
 ```
 
 <br />
