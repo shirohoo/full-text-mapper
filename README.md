@@ -41,7 +41,7 @@
 
 ***이때 `기본생성자`가 반드시 필요하며, `접근제한자`가 `private`이여도 괜찮습니다.***
 
-전문과 매핑될 클래스를 작성하고 `@FullText`를 클래스에, `@Protocol`를 각 필드에 정의합니다.
+전문과 매핑될 클래스를 작성하고 `@FullText`를 클래스 레벨에, `@Length`를 필드 레벨에 정의합니다.
 
 전문의 데이터가 처리되는 시점에 항상 `String` 타입임을 가정하며, 선언된 필드 타입을 기반으로 형변환 매핑합니다.
 
@@ -55,38 +55,55 @@
 - `LocalDateTime` - 현재 `yyyyMMddHHmmss`만 지원
 - `BigDecimal`
 
+<br />
+
+유의해야 할 사항은 다음과 같습니다.
+
+<br />
+
+- `@FullText`에 선언된 `길이(length)`와 `각 필드에 선언된 @Length의 총합`이 일치하지 않을 경우 예외를 발생시킵니다.
+- 클래스 레벨에 `@FullText`가 선언돼있지 않으면 예외를 발생시킵니다.
+- 필드 레벨에 `@Legnth`가 누락돼있다면 예외를 발생시킵니다.
+
+<br />
+
+구체적인 선언 방법은 하기와 같습니다.
 
 <br />
 
 ```java
-@FullText(totalLength = 300)
+@FullText(
+    length = 300,
+    encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
+    padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
+)
 public class TestModel {
 
-    @Protocol(length = 1)
+    @Length(1)
     private String headerType;
 
-    @Protocol(length = 8)
-    private LocalDate createAt; // 전문의 데이터를 LocalDate로 형변환하여 바인딩 (현재 yyyyMMdd만 지원)
+    @Length(8)
+    private LocalDate createAt; // yyyyMMdd
 
-    @Protocol(length = 91)
+    @Length(91)
     private String headerPadding;
 
-    @Protocol(length = 1)
+    @Length(1)
     private String dataType;
 
-    @Protocol(length = 10)
+    @Length(10)
     private String name;
 
-    @Protocol(length = 3)
-    private int age; // 전문의 데이터를 int로 형변환하여 바인딩
+    @Length(3)
+    private int age;
 
-    @Protocol(length = 86)
+    @Length(86)
     private String dataPadding;
 
-    @Protocol(length = 1)
+    @Length(1)
     private String trailerType;
 
-    @Protocol(length = 99)
+    @Length(99)
     private String trailerPadding;
 
 }

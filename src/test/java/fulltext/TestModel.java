@@ -3,34 +3,38 @@ package fulltext;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@FullText(length = 300)
+@FullText(
+    length = 300,
+    encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
+    padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
+)
 public class TestModel {
 
-    @Protocol(length = 1)
+    @Length(1)
     private String headerType;
 
-    @Protocol(length = 8)
+    @Length(8)
     private LocalDate createAt; // yyyyMMdd
 
-    @Protocol(length = 91)
+    @Length(91)
     private String headerPadding;
 
-    @Protocol(length = 1)
+    @Length(1)
     private String dataType;
 
-    @Protocol(length = 10)
+    @Length(10)
     private String name;
 
-    @Protocol(length = 3)
+    @Length(3)
     private int age;
 
-    @Protocol(length = 86)
+    @Length(86)
     private String dataPadding;
 
-    @Protocol(length = 1)
+    @Length(1)
     private String trailerType;
 
-    @Protocol(length = 99)
+    @Length(99)
     private String trailerPadding;
 
     private TestModel() {

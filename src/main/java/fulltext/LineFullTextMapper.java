@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  * <p>
- * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Protocol} must be properly declared in the object to be mapped.
+ * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Length} must be properly declared in the object to be mapped.
  */
 public final class LineFullTextMapper implements FullTextMapper {
 
@@ -101,29 +101,29 @@ public final class LineFullTextMapper implements FullTextMapper {
     private <T> void verifyAnnotation(final Class<T> clazz) {
         Objects.requireNonNull(clazz, "clazz is must not be null.");
 
-        final int fullTextTotalLen = getAnnotation(clazz).length();
-        final int protocolTotalLen = protocolLengths(clazz);
+        final int fullTextLen = getAnnotation(clazz).length();
+        final int fieldsLen = fieldsLen(clazz);
 
-        if (fullTextTotalLen != protocolTotalLen) {
+        if (fullTextLen != fieldsLen) {
             throw new IllegalArgumentException(format(
-                "There is a problem with setting the full text object. @FullText: %d, @Protocol total length: %d",
-                fullTextTotalLen, protocolTotalLen
+                "There is a problem with setting the full text object. @FullText: %d, @Length total length: %d",
+                fullTextLen, fieldsLen
             ));
         }
     }
 
-    private <T> int protocolLengths(final Class<T> clazz) {
+    private <T> int fieldsLen(final Class<T> clazz) {
         return stream(clazz.getDeclaredFields())
             .map(this::getAnnotation)
             .filter(Objects::nonNull)
-            .map(Protocol::length)
+            .map(Length::value)
             .reduce(0, Integer::sum);
     }
 
-    private Protocol getAnnotation(final Field field) {
-        Protocol annotation = field.getAnnotation(Protocol.class);
+    private Length getAnnotation(final Field field) {
+        Length annotation = field.getAnnotation(Length.class);
         if (isNull(annotation)) {
-            throw new NoSuchElementException("Could not find @Protocol in argument object. please add @Protocol at field level.");
+            throw new NoSuchElementException("Could not find @Length in argument object. please add @Length at field level.");
         }
         return annotation;
     }
@@ -165,8 +165,7 @@ public final class LineFullTextMapper implements FullTextMapper {
 
 
     private <T> String dataBind(String data, final T instance, final Field field, final PadCharacter padCharacter) throws IllegalAccessException {
-        final Protocol protocol = getAnnotation(field);
-        final int length = protocol.length();
+        final int length = getAnnotation(field).value();
 
         field.setAccessible(true);
 
@@ -184,6 +183,12 @@ public final class LineFullTextMapper implements FullTextMapper {
         return padCharacter.removeLeftPad(data.substring(0, len));
     }
 
+    /**
+     * It takes an object as input, refers to {@link FullText} and {@link Length} declared, and creates full text and returns it.
+     *
+     * @param object want to output in full text
+     * @return full text
+     */
     @Override
     public String write(final Object object) {
         final Class<?> clazz = object.getClass();
@@ -222,8 +227,8 @@ public final class LineFullTextMapper implements FullTextMapper {
         return field;
     }
 
-    private int padLen(final Protocol protocol, final Object data) {
-        return protocol.length() - data.toString().length();
+    private int padLen(final Length length, final Object data) {
+        return length.value() - data.toString().length();
     }
 
     private void errorLogging(final String message) {

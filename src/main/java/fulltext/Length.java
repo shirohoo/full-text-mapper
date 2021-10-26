@@ -12,16 +12,11 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Protocol {
+public @interface Length {
 
     /**
      * Defines the length occupied by the field in the full text.
      */
-    int length() default 0;
-
-    /**
-     * Indicates whether the field is for padding only.
-     */
-    boolean padOnly() default false;
+    int value();
 
 }
