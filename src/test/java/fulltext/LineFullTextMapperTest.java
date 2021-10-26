@@ -16,6 +16,17 @@ class LineFullTextMapperTest {
         assertThat(testModel.get()).isEqualTo(expectedModel());
     }
 
+    @Test
+    void write() throws Exception {
+        String actual = mapper.write(expectedModel());
+        assertThat(actual).isEqualTo(
+            "120211011                                                                                           "
+                + "2      siro 28                                                                                "
+                + "      3                                                                                       "
+                + "            "
+        );
+    }
+
     private String mockData() {
         return "120211011                                                                                           " +
             "2      siro 28                                                                                      " +
@@ -34,17 +45,6 @@ class LineFullTextMapperTest {
             .trailerType("3")
             .trailerPadding("")
             .build();
-    }
-
-    @Test
-    void write() throws Exception {
-        String actual = mapper.write(expectedModel());
-        assertThat(actual).isEqualTo(
-            "120211011                                                                                           "
-                + "2      siro 28                                                                                "
-                + "      3                                                                                       "
-                + "            "
-        );
     }
 
 }

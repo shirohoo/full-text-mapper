@@ -34,4 +34,5 @@ public enum JavaType {
     public Function<String, ?> getFunction() {
         return function;
     }
+
 }

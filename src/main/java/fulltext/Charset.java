@@ -13,7 +13,7 @@ public enum Charset {
     ;
 
     private static final Map<Charset, String> MAP = stream(values())
-        .collect(Collectors.toUnmodifiableMap(Function.identity(), Charset::getEncoding));
+        .collect(Collectors.toMap(Function.identity(), Charset::getEncoding));
 
     private final String encoding;
 
@@ -31,4 +31,5 @@ public enum Charset {
         }
         return MAP.get(charset);
     }
+
 }
