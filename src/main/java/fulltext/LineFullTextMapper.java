@@ -1,6 +1,5 @@
 package fulltext;
 
-import static java.lang.Math.max;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Objects.isNull;
@@ -188,7 +187,7 @@ public final class LineFullTextMapper implements FullTextMapper {
     @Override
     public String write(final Object object) {
         final Class<?> clazz = object.getClass();
-        final String padChar = padChar(clazz);
+        PadCharacter padCharacter = getAnnotation(clazz).padChar();
         verifyAnnotation(clazz);
 
         StringBuilder builder = new StringBuilder();
@@ -200,13 +199,13 @@ public final class LineFullTextMapper implements FullTextMapper {
             Class<?> fieldClass = field.getClass();
             if (fieldClass.equals(LocalDate.class)) {
                 String data = ((LocalDate) field).format(DateTimeFormatter.BASIC_ISO_DATE);
-                builder.append(leftPad(data, pad(padChar, padLen)));
+                builder.append(padCharacter.leftPad(data, padLen));
             } else if (fieldClass.equals(LocalDateTime.class)) {
                 String data = ((LocalDateTime) field).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                builder.append(leftPad(data, pad(padChar, padLen)));
+                builder.append(padCharacter.leftPad(data, padLen));
             } else {
                 String data = field.toString();
-                builder.append(leftPad(data, pad(padChar, padLen)));
+                builder.append(padCharacter.leftPad(data, padLen));
             }
         }
         return builder.toString();
@@ -225,20 +224,6 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private int padLen(final Protocol protocol, final Object data) {
         return protocol.length() - data.toString().length();
-    }
-
-    private String leftPad(final String data, final String pad) {
-        return pad + data;
-    }
-
-    private String pad(final String padChar, final int len) {
-        return new StringBuilder()
-            .append(padChar.repeat(max(0, len)))
-            .toString();
-    }
-
-    private String padChar(final Class<?> clazz) {
-        return PadCharacter.findBy(getAnnotation(clazz).padChar());
     }
 
     private void errorLogging(final String message) {
