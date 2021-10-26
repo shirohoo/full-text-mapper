@@ -3,7 +3,6 @@ package fulltext;
 import static java.lang.Math.max;
 import static java.util.Arrays.stream;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,15 +19,8 @@ public enum PadCharacter {
         this.character = character;
     }
 
-    private String getCharacter() {
+    public String getCharacter() {
         return character;
-    }
-
-    public static String findBy(final PadCharacter charset) {
-        if (!MAP.containsKey(charset)) {
-            throw new NoSuchElementException();
-        }
-        return MAP.get(charset);
     }
 
     public String pad(final int len) {
@@ -39,5 +31,9 @@ public enum PadCharacter {
 
     public String leftPad(final String data, final int len) {
         return pad(len) + data;
+    }
+
+    public String removeLeftPad(final String data) {
+        return data.replaceFirst("^" + character + "+(?!$)", "");
     }
 }

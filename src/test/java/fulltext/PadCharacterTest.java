@@ -31,4 +31,16 @@ class PadCharacterTest {
         assertThat(actual).isEqualTo("00000siro");
     }
 
+    @Test
+    void remove_space() throws Exception {
+        String actual = PadCharacter.SPACE.removeLeftPad("     siro");
+        assertThat(actual).isEqualTo("siro");
+    }
+
+    @Test
+    void remove_zero() throws Exception {
+        String actual = PadCharacter.ZERO.removeLeftPad("00000siro");
+        assertThat(actual).isEqualTo("siro");
+    }
+
 }
