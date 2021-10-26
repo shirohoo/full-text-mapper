@@ -32,15 +32,39 @@ class PadCharacterTest {
     }
 
     @Test
-    void remove_space() throws Exception {
-        String actual = PadCharacter.SPACE.removeLeftPad("     siro");
+    void remove_space_1() throws Exception {
+        String actual = PadCharacter.SPACE.removeLeftPad("    siro");
         assertThat(actual).isEqualTo("siro");
     }
 
     @Test
-    void remove_zero() throws Exception {
+    void remove_space_2() throws Exception {
+        String actual = PadCharacter.SPACE.removeLeftPad(" ");
+        assertThat(actual).isEqualTo("");
+    }
+
+    @Test
+    void remove_space_3() throws Exception {
+        String actual = PadCharacter.SPACE.removeLeftPad("");
+        assertThat(actual).isEqualTo("");
+    }
+
+    @Test
+    void remove_zero_1() throws Exception {
         String actual = PadCharacter.ZERO.removeLeftPad("00000siro");
         assertThat(actual).isEqualTo("siro");
+    }
+
+    @Test
+    void remove_zero_2() throws Exception {
+        String actual = PadCharacter.ZERO.removeLeftPad("0");
+        assertThat(actual).isEqualTo("");
+    }
+
+    @Test
+    void remove_zero_3() throws Exception {
+        String actual = PadCharacter.ZERO.removeLeftPad("");
+        assertThat(actual).isEqualTo("");
     }
 
 }
