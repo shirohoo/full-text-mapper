@@ -168,9 +168,9 @@ public final class LineFullTextMapper implements FullTextMapper {
 
         field.setAccessible(true);
 
-        for (JavaType javaType : JavaType.values()) {
-            if (field.getType().equals(javaType.getClazz())) {
-                Function<String, ?> typeCasting = javaType.getFunction();
+        for (ClassCaster classCaster : ClassCaster.values()) {
+            if (field.getType().equals(classCaster.getClazz())) {
+                Function<String, ?> typeCasting = classCaster.getCastFunction();
                 field.set(instance, typeCasting.apply(slice(data, length, padCharacter)));
                 data = data.substring(length);
             }

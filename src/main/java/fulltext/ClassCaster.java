@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
-public enum JavaType {
+public enum ClassCaster {
 
     STRING(String.class, data -> data),
     INT(int.class, Integer::valueOf),
@@ -20,19 +20,19 @@ public enum JavaType {
     BIG_DECIMAL(BigDecimal.class, BigDecimal::new);
 
     private final Class<?> clazz;
-    private final Function<String, ?> function;
+    private final Function<String, ?> castFunction;
 
-    JavaType(final Class<?> clazz, final Function<String, ?> function) {
+    ClassCaster(final Class<?> clazz, final Function<String, ?> castFunction) {
         this.clazz = clazz;
-        this.function = function;
+        this.castFunction = castFunction;
     }
 
     public Class<?> getClazz() {
         return clazz;
     }
 
-    public Function<String, ?> getFunction() {
-        return function;
+    public Function<String, ?> getCastFunction() {
+        return castFunction;
     }
 
 }
