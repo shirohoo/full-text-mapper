@@ -94,7 +94,6 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     private <T> void verify(final String line, final Class<T> clazz) {
-        Objects.requireNonNull(line, "line is must not be null.");
         verifyAnnotation(clazz);
     }
 
