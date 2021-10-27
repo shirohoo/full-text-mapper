@@ -1,6 +1,7 @@
 package fulltext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import fulltext.model.ValidModel;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;

@@ -1,5 +1,9 @@
-package fulltext;
+package fulltext.model;
 
+import fulltext.Charset;
+import fulltext.FullText;
+import fulltext.Length;
+import fulltext.PadCharacter;
 import java.time.LocalDate;
 import java.util.Objects;
 
