@@ -43,7 +43,7 @@
 <dependency>
   <groupId>io.github.shirohoo</groupId>
   <artifactId>full-text-mapper</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.shirohoo:full-text-mapper:1.0'
+    implementation 'io.github.shirohoo:full-text-mapper:1.1'
 }
 ```
 
