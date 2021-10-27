@@ -26,6 +26,10 @@ public enum PadCharacter {
         return pad(len) + data;
     }
 
+    public String rightPad(final String data, final int len) {
+        return data + pad(len);
+    }
+
     public String pad(final int len) {
         return new StringBuilder()
             .append(new String(new char[len]).replace("\0", character))
@@ -36,4 +40,10 @@ public enum PadCharacter {
         return data.replaceFirst("^" + character + "*", "");
     }
 
+    public String removeRightPad(String data) {
+        while (data.endsWith(character)) {
+            data = data.substring(0, data.lastIndexOf(character));
+        }
+        return data;
+    }
 }
