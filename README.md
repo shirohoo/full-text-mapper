@@ -145,7 +145,7 @@ public class TestModel {
 
 ```java
 FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
-Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
+Optional<TestModel> validModel = mapper.readValue(mockData(), TestModel.class);
 ```
 
 <br />
@@ -161,8 +161,8 @@ class LineFullTextMapperTest {
 
     @Test
     void readValue() throws Exception {
-        Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
-        assertThat(testModel.get()).isEqualTo(expectedModel());
+        Optional<TestModel> validModel = mapper.readValue(mockData(), TestModel.class);
+        assertThat(validModel.get()).isEqualTo(expectedModel());
     }
 
     private String mockData() {

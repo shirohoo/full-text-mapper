@@ -12,7 +12,7 @@ class LineFullTextMapperTest {
 
     @Test
     void readValue() throws Exception {
-        Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
+        Optional<ValidModel> testModel = mapper.readValue(mockData(), ValidModel.class);
         assertThat(testModel.get()).isEqualTo(expectedModel());
     }
 
@@ -33,8 +33,8 @@ class LineFullTextMapperTest {
             "3                                                                                                   ";
     }
 
-    private TestModel expectedModel() {
-        return TestModel.builder()
+    private ValidModel expectedModel() {
+        return ValidModel.builder()
             .headerType("1")
             .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
             .headerPadding("")

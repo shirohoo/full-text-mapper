@@ -8,7 +8,7 @@ import java.util.Objects;
     encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
     padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
 )
-public class TestModel {
+public class ValidModel {
 
     @Length(1)
     private String headerType;
@@ -37,10 +37,10 @@ public class TestModel {
     @Length(99)
     private String trailerPadding;
 
-    private TestModel() {
+    private ValidModel() {
     }
 
-    private TestModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
+    private ValidModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
         final String name, final int age, final String dataPadding, final String trailerType, final String trailerPadding) {
         this.headerType = headerType;
         this.createAt = createAt;
@@ -80,10 +80,10 @@ public class TestModel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final TestModel testModel = (TestModel) o;
-        return age == testModel.age && Objects.equals(headerType, testModel.headerType) && Objects.equals(createAt, testModel.createAt) && Objects.equals(headerPadding, testModel.headerPadding) && Objects.equals(
-            dataType, testModel.dataType) && Objects.equals(name, testModel.name) && Objects.equals(dataPadding, testModel.dataPadding) && Objects.equals(trailerType, testModel.trailerType) && Objects.equals(
-            trailerPadding, testModel.trailerPadding);
+        final ValidModel validModel = (ValidModel) o;
+        return age == validModel.age && Objects.equals(headerType, validModel.headerType) && Objects.equals(createAt, validModel.createAt) && Objects.equals(headerPadding, validModel.headerPadding) && Objects.equals(
+            dataType, validModel.dataType) && Objects.equals(name, validModel.name) && Objects.equals(dataPadding, validModel.dataPadding) && Objects.equals(trailerType, validModel.trailerType) && Objects.equals(
+            trailerPadding, validModel.trailerPadding);
     }
 
     @Override
@@ -148,8 +148,8 @@ public class TestModel {
             return this;
         }
 
-        public TestModel build() {
-            return new TestModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
+        public ValidModel build() {
+            return new ValidModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
 
     }
