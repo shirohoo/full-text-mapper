@@ -14,12 +14,12 @@ class LineFullTextMapperTest {
     @Test
     void readValue() throws Exception {
         Optional<ValidModel> testModel = mapper.readValue(mockData(), ValidModel.class);
-        assertThat(testModel.get()).isEqualTo(expectedModel());
+        assertThat(testModel.get()).isEqualTo(createValidModel());
     }
 
     @Test
     void write() throws Exception {
-        String actual = mapper.write(expectedModel());
+        String actual = mapper.write(createValidModel());
         assertThat(actual).isEqualTo(
             "120211011                                                                                           "
                 + "2      siro 28                                                                                "
@@ -34,7 +34,7 @@ class LineFullTextMapperTest {
             "3                                                                                                   ";
     }
 
-    private ValidModel expectedModel() {
+    private ValidModel createValidModel() {
         return ValidModel.builder()
             .headerType("1")
             .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
