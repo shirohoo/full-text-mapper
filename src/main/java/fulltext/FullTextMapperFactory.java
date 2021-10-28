@@ -6,8 +6,9 @@ public class FullTextMapperFactory {
     }
 
     /**
+     * Returns a singleton instance of LineFullTextMapper.
      *
-     * @return
+     * @return a instance of LineFullTextMapper. this is thread-safe.
      */
     public static FullTextMapper lineFullTextMapper() {
         return LineFullTextMapperHolder.instance;
