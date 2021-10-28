@@ -1,9 +1,9 @@
 package fulltext.model;
 
-import fulltext.Charset;
+import fulltext.enums.Charset;
 import fulltext.FullText;
 import fulltext.Length;
-import fulltext.PadCharacter;
+import fulltext.enums.PadCharacter;
 import java.time.LocalDate;
 import java.util.Objects;
 

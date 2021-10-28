@@ -1,15 +1,15 @@
 package fulltext;
 
-import static fulltext.ClassCaster.BIG_DECIMAL;
-import static fulltext.ClassCaster.DOUBLE;
-import static fulltext.ClassCaster.DOUBLE_WRAPPER;
-import static fulltext.ClassCaster.INT;
-import static fulltext.ClassCaster.INT_WRAPPER;
-import static fulltext.ClassCaster.LOCAL_DATE;
-import static fulltext.ClassCaster.LOCAL_DATE_TIME;
-import static fulltext.ClassCaster.LONG;
-import static fulltext.ClassCaster.LONG_WRAPPER;
-import static fulltext.ClassCaster.STRING;
+import static fulltext.enums.ClassCaster.BIG_DECIMAL;
+import static fulltext.enums.ClassCaster.DOUBLE;
+import static fulltext.enums.ClassCaster.DOUBLE_WRAPPER;
+import static fulltext.enums.ClassCaster.INT;
+import static fulltext.enums.ClassCaster.INT_WRAPPER;
+import static fulltext.enums.ClassCaster.LOCAL_DATE;
+import static fulltext.enums.ClassCaster.LOCAL_DATE_TIME;
+import static fulltext.enums.ClassCaster.LONG;
+import static fulltext.enums.ClassCaster.LONG_WRAPPER;
+import static fulltext.enums.ClassCaster.STRING;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;

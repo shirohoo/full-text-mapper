@@ -1,4 +1,4 @@
-package fulltext;
+package fulltext.enums;
 
 import static java.util.Arrays.stream;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package fulltext;
+package fulltext.enums;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

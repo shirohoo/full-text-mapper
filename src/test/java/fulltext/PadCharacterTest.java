@@ -1,6 +1,7 @@
 package fulltext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import fulltext.enums.PadCharacter;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
