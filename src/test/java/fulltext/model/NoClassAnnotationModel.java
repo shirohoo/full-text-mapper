@@ -1,6 +1,6 @@
 package fulltext.model;
 
-import fulltext.Length;
+import fulltext.annotation.Length;
 import java.time.LocalDate;
 import java.util.Objects;
 

@@ -3,6 +3,8 @@ package fulltext;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Objects.isNull;
+import fulltext.annotation.FullText;
+import fulltext.annotation.Length;
 import fulltext.enums.Charset;
 import fulltext.enums.ClassCaster;
 import fulltext.enums.PadCharacter;

@@ -1,5 +1,6 @@
-package fulltext;
+package fulltext.annotation;
 
+import fulltext.FullTextMapper;
 import fulltext.enums.Charset;
 import fulltext.enums.PadCharacter;
 import java.lang.annotation.Documented;

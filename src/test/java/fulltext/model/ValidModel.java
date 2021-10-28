@@ -1,8 +1,8 @@
 package fulltext.model;
 
 import fulltext.enums.Charset;
-import fulltext.FullText;
-import fulltext.Length;
+import fulltext.annotation.FullText;
+import fulltext.annotation.Length;
 import fulltext.enums.PadCharacter;
 import java.time.LocalDate;
 import java.util.Objects;

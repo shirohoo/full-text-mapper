@@ -1,5 +1,7 @@
 package fulltext;
 
+import fulltext.annotation.FullText;
+import fulltext.annotation.Length;
 import java.util.Optional;
 
 /**
