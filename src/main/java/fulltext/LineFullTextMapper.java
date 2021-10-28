@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 /**
  * <p>
  * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Field} must be properly declared in the object to be mapped.
+ * This class is thread safe.
  */
 public final class LineFullTextMapper implements FullTextMapper {
 
