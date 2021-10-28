@@ -27,11 +27,6 @@ public @interface Field {
     int length() default 0;
 
     /**
-     * encoding of this field. default is Charset.UTF_8
-     */
-    Charset encoding() default Charset.UTF_8;
-
-    /**
      * padChar of this field. default is PadCharacter.SPACE
      */
     PadCharacter padChar() default PadCharacter.SPACE;
