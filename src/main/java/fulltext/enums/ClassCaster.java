@@ -32,7 +32,7 @@ public enum ClassCaster {
         return clazz;
     }
 
-    public Function<String, ?> castFunction() {
+    public Function<String, ?> classCast() {
         return castFunction;
     }
 
