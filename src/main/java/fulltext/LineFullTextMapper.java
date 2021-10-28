@@ -8,6 +8,7 @@ import fulltext.annotation.FullText;
 import fulltext.enums.Charset;
 import fulltext.enums.ClassCaster;
 import fulltext.enums.PadCharacter;
+import fulltext.enums.PadPosition;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -57,7 +58,7 @@ public final class LineFullTextMapper implements FullTextMapper {
      */
     public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
         final String line = convertStr(bytes, getAnnotation(clazz).encoding());
-        verify(line, clazz);
+        verifyClass(clazz);
         return Optional.ofNullable(parse(line, clazz));
     }
 
@@ -78,6 +79,14 @@ public final class LineFullTextMapper implements FullTextMapper {
         return annotation;
     }
 
+    private Field getAnnotation(final java.lang.reflect.Field field) {
+        Field annotation = field.getAnnotation(Field.class);
+        if (isNull(annotation)) {
+            throw new NoSuchElementException("Could not find @Field in argument object. please add @Field at field level.");
+        }
+        return annotation;
+    }
+
     /**
      * Creates an instance of the received object, reads the full text, and binds it to each field of the created instance.
      * <p>
@@ -93,11 +102,11 @@ public final class LineFullTextMapper implements FullTextMapper {
      * @return instance of Optional{@literal <}T {@literal >}
      */
     public <T> Optional<T> readValue(final String line, final Class<T> clazz) {
-        verify(line, clazz);
+        verifyClass(clazz);
         return Optional.ofNullable(parse(line, clazz));
     }
 
-    private <T> void verify(final String line, final Class<T> clazz) {
+    private <T> void verifyClass(final Class<T> clazz) {
         verifyAnnotation(clazz);
     }
 
@@ -123,14 +132,6 @@ public final class LineFullTextMapper implements FullTextMapper {
             .reduce(0, Integer::sum);
     }
 
-    private Field getAnnotation(final java.lang.reflect.Field field) {
-        Field annotation = field.getAnnotation(Field.class);
-        if (isNull(annotation)) {
-            throw new NoSuchElementException("Could not find @Field in argument object. please add @Field at field level.");
-        }
-        return annotation;
-    }
-
     private <T> T parse(String line, final Class<T> clazz) {
         final T instance = newInstance(clazz);
         return isNull(instance) ? null : setInstance(line, clazz, instance);
@@ -154,7 +155,11 @@ public final class LineFullTextMapper implements FullTextMapper {
     private <T> T setInstance(String line, final Class<T> clazz, final T instance) {
         try {
             for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
-                line = dataBind(line, instance, field, getAnnotation(clazz).padChar());
+                FullText classAnnotation = getAnnotation(clazz);
+                Field fieldAnnotation = getAnnotation(field);
+                PadCharacter padChar = getPadCharacter(classAnnotation, fieldAnnotation);
+                PadPosition padPosition = getPadPosition(classAnnotation, fieldAnnotation);
+                line = dataBind(line, instance, field, padChar, padPosition);
             }
             if (line.length() != 0) {
                 throw new IllegalArgumentException("Parsing has been completed. but remaining data exists. current data: " + line);
@@ -167,7 +172,7 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
 
-    private <T> String dataBind(String data, final T instance, final java.lang.reflect.Field field, final PadCharacter padCharacter) throws IllegalAccessException {
+    private <T> String dataBind(String data, final T instance, final java.lang.reflect.Field field, final PadCharacter padCharacter, final PadPosition padPosition) throws IllegalAccessException {
         final int length = getAnnotation(field).length();
 
         field.setAccessible(true);
@@ -175,15 +180,26 @@ public final class LineFullTextMapper implements FullTextMapper {
         for (ClassCaster classCaster : ClassCaster.values()) {
             if (field.getType().equals(classCaster.getClazz())) {
                 Function<String, ?> typeCasting = classCaster.castFunction();
-                field.set(instance, typeCasting.apply(slice(data, length, padCharacter)));
+                field.set(instance, typeCasting.apply(slice(data, padCharacter, padPosition, length)));
                 data = data.substring(length);
             }
         }
         return data;
     }
 
-    private String slice(final String data, final int len, final PadCharacter padCharacter) {
-        return padCharacter.removeLeftPad(data.substring(0, len));
+    private String slice(final String data, final PadCharacter padCharacter, final PadPosition padPosition, final int length) {
+        if (padPosition.isLeft()) {
+            return sliceLeft(data, length, padCharacter);
+        }
+        return sliceRight(data, length, padCharacter);
+    }
+
+    private String sliceLeft(final String data, final int len, final PadCharacter padChar) {
+        return padChar.removeLeftPad(data.substring(0, len));
+    }
+
+    private String sliceRight(final String data, final int len, final PadCharacter padChar) {
+        return padChar.removeRightPad(data.substring(0, len));
     }
 
     /**
@@ -237,6 +253,24 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private int padLen(final Field field, final Object data) {
         return field.length() - data.toString().length();
+    }
+
+    private PadCharacter getPadCharacter(final FullText classAnnotation, final Field fieldAnnotation) {
+        final PadCharacter cpc = classAnnotation.padChar();
+        final PadCharacter fpc = fieldAnnotation.padChar();
+        return cpc.equals(fpc) ? cpc : fpc;
+    }
+
+    private Charset getEncoding(final FullText classAnnotation, final Field fieldAnnotation) {
+        final Charset cc = classAnnotation.encoding();
+        final Charset fc = fieldAnnotation.encoding();
+        return cc.equals(fc) ? cc : fc;
+    }
+
+    private PadPosition getPadPosition(final FullText classAnnotation, final Field fieldAnnotation) {
+        final PadPosition cpp = classAnnotation.padPosition();
+        final PadPosition fpp = fieldAnnotation.padPosition();
+        return cpp.equals(fpp) ? cpp : fpp;
     }
 
     private void errorLogging(final Exception e) {
