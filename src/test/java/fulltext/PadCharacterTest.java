@@ -1,70 +1,90 @@
 package fulltext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.jupiter.api.Test;
+import fulltext.enums.PadCharacter;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class PadCharacterTest {
 
-    @Test
-    void pad_space() throws Exception {
-        String pad = PadCharacter.SPACE.pad(10);
-        assertThat(pad).isEqualTo("          ");
+    @MethodSource
+    @ParameterizedTest
+    void pad(final PadCharacter padCharacter, final int padLen, final String expected) throws Exception {
+        String actual = padCharacter.pad(padLen);
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void pad_zero() throws Exception {
-        String pad = PadCharacter.ZERO.pad(10);
-        assertThat(pad).isEqualTo("0000000000");
+    private static Stream<Arguments> pad() {
+        return Stream.of(
+            Arguments.of(PadCharacter.SPACE, 10, "          "),
+            Arguments.of(PadCharacter.ZERO, 10, "0000000000")
+        );
     }
 
-    @Test
-    void leftPad_space() throws Exception {
-        String data = "siro";
-        String actual = PadCharacter.SPACE.leftPad(data, 5);
-        assertThat(actual).isEqualTo("     siro");
+    @MethodSource
+    @ParameterizedTest
+    void leftPad(final PadCharacter padCharacter, String charSequence, final int padLen, final String expected) throws Exception {
+        String actual = padCharacter.leftPad(charSequence, padLen);
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void leftPad_zero() throws Exception {
-        String data = "siro";
-        String actual = PadCharacter.ZERO.leftPad(data, 5);
-        assertThat(actual).isEqualTo("00000siro");
+    private static Stream<Arguments> leftPad() {
+        return Stream.of(
+            Arguments.of(PadCharacter.SPACE, "siro", 5, "     siro"),
+            Arguments.of(PadCharacter.ZERO, "siro", 5, "00000siro")
+        );
     }
 
-    @Test
-    void remove_space_1() throws Exception {
-        String actual = PadCharacter.SPACE.removeLeftPad("    siro");
-        assertThat(actual).isEqualTo("siro");
+    @MethodSource
+    @ParameterizedTest
+    void rightPad(final PadCharacter padCharacter, String charSequence, final int padLen, final String expected) throws Exception {
+        String actual = padCharacter.rightPad(charSequence, padLen);
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void remove_space_2() throws Exception {
-        String actual = PadCharacter.SPACE.removeLeftPad(" ");
-        assertThat(actual).isEqualTo("");
+    private static Stream<Arguments> rightPad() {
+        return Stream.of(
+            Arguments.of(PadCharacter.SPACE, "siro", 5, "siro     "),
+            Arguments.of(PadCharacter.ZERO, "siro", 5, "siro00000")
+        );
     }
 
-    @Test
-    void remove_space_3() throws Exception {
-        String actual = PadCharacter.SPACE.removeLeftPad("");
-        assertThat(actual).isEqualTo("");
+    @MethodSource
+    @ParameterizedTest
+    void removeLeft(final PadCharacter padCharacter, final String charSequence, final String expected) throws Exception {
+        String actual = padCharacter.removeLeftPad(charSequence);
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void remove_zero_1() throws Exception {
-        String actual = PadCharacter.ZERO.removeLeftPad("00000siro");
-        assertThat(actual).isEqualTo("siro");
+    private static Stream<Arguments> removeLeft() {
+        return Stream.of(
+            Arguments.of(PadCharacter.SPACE, "    siro", "siro"),
+            Arguments.of(PadCharacter.SPACE, " ", ""),
+            Arguments.of(PadCharacter.SPACE, "", ""),
+            Arguments.of(PadCharacter.ZERO, "00000siro", "siro"),
+            Arguments.of(PadCharacter.ZERO, "0", ""),
+            Arguments.of(PadCharacter.ZERO, "", "")
+        );
     }
 
-    @Test
-    void remove_zero_2() throws Exception {
-        String actual = PadCharacter.ZERO.removeLeftPad("0");
-        assertThat(actual).isEqualTo("");
+    @MethodSource
+    @ParameterizedTest
+    void removeRightPad(final PadCharacter padCharacter, final String charSequence, final String expected) throws Exception {
+        String actual = padCharacter.removeRightPad(charSequence);
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void remove_zero_3() throws Exception {
-        String actual = PadCharacter.ZERO.removeLeftPad("");
-        assertThat(actual).isEqualTo("");
+    private static Stream<Arguments> removeRightPad() {
+        return Stream.of(
+            Arguments.of(PadCharacter.SPACE, "siro    ", "siro"),
+            Arguments.of(PadCharacter.SPACE, " ", ""),
+            Arguments.of(PadCharacter.SPACE, "", ""),
+            Arguments.of(PadCharacter.ZERO, "siro00000", "siro"),
+            Arguments.of(PadCharacter.ZERO, "0", ""),
+            Arguments.of(PadCharacter.ZERO, "", "")
+        );
     }
 
 }

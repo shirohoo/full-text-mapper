@@ -1,50 +1,55 @@
 package fulltext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import fulltext.fixture.FullTextCreator;
+import fulltext.fixture.ModelCreator;
+import fulltext.model.InvalidClassAnnotationModel;
+import fulltext.model.ValidModel;
+import fulltext.model.ValidOptionModel;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class LineFullTextMapperTest {
 
-    private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
 
     @Test
     void readValue() throws Exception {
-        Optional<TestModel> testModel = mapper.readValue(mockData(), TestModel.class);
-        assertThat(testModel.get()).isEqualTo(expectedModel());
+        Optional<ValidModel> actual = mapper.readValue(FullTextCreator.validData(), ValidModel.class);
+        assertThat(actual.get()).isEqualTo(ModelCreator.validModel());
+    }
+
+    @Test
+    void readValue_option() throws Exception {
+        Optional<ValidOptionModel> actual = mapper.readValue(FullTextCreator.validOptionData(), ValidOptionModel.class);
+        assertThat(actual.get()).isEqualTo(ModelCreator.validOptionModel());
+    }
+
+    @Test
+    void readValue_exception_1() throws Exception {
+        assertThatThrownBy(() -> mapper.readValue(FullTextCreator.validData(), null))
+            .hasMessage("clazz is must not be null.")
+            .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void readValue_exception_2() throws Exception {
+        assertThatThrownBy(() -> mapper.readValue(FullTextCreator.validData(), InvalidClassAnnotationModel.class))
+            .hasMessage("There is a problem with setting the full text object. @FullText: 301, @Field total length: 300")
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void write() throws Exception {
-        String actual = mapper.write(expectedModel());
-        assertThat(actual).isEqualTo(
-            "120211011                                                                                           "
-                + "2      siro 28                                                                                "
-                + "      3                                                                                       "
-                + "            "
-        );
+        String actual = mapper.write(ModelCreator.validModel());
+        assertThat(actual).isEqualTo(FullTextCreator.validModel());
     }
 
-    private String mockData() {
-        return "120211011                                                                                           " +
-            "2      siro 28                                                                                      " +
-            "3                                                                                                   ";
-    }
-
-    private TestModel expectedModel() {
-        return TestModel.builder()
-            .headerType("1")
-            .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
-            .headerPadding("")
-            .dataType("2")
-            .name("siro")
-            .age(28)
-            .dataPadding("")
-            .trailerType("3")
-            .trailerPadding("")
-            .build();
+    @Test
+    void write_option() throws Exception {
+        String actual = mapper.write(ModelCreator.validOptionModel());
+        assertThat(actual).isEqualTo(FullTextCreator.validOptionData());
     }
 
 }

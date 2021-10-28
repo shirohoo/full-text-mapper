@@ -1,5 +1,9 @@
-package fulltext;
+package fulltext.annotation;
 
+import fulltext.FullTextMapper;
+import fulltext.enums.Charset;
+import fulltext.enums.PadCharacter;
+import fulltext.enums.PadPosition;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,6 +12,7 @@ import java.lang.annotation.Target;
 
 /**
  * {@link FullTextMapper} refers to this annotation to mapping the object to the full text.
+ * set here are used globally only in class scope and do not take precedence over field level annotations.
  */
 @Documented
 @Target(ElementType.TYPE)
@@ -28,5 +33,10 @@ public @interface FullText {
      * Sets the padding character to be used in full text. The default is a space character(" ").
      */
     PadCharacter padChar() default PadCharacter.SPACE;
+
+    /**
+     * Determines whether the pad is padded on the left or on the right. default is left.
+     */
+    PadPosition padPosition() default PadPosition.LEFT_PAD;
 
 }

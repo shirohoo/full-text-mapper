@@ -1,46 +1,42 @@
-package fulltext;
+package fulltext.model;
 
+import fulltext.annotation.Field;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@FullText(
-    length = 300,
-    encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
-    padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
-)
-public class TestModel {
+public class NoClassAnnotationModel {
 
-    @Length(1)
+    @Field(length = 1)
     private String headerType;
 
-    @Length(8)
+    @Field(length = 8)
     private LocalDate createAt; // yyyyMMdd
 
-    @Length(91)
+    @Field(length = 91)
     private String headerPadding;
 
-    @Length(1)
+    @Field(length = 1)
     private String dataType;
 
-    @Length(10)
+    @Field(length = 10)
     private String name;
 
-    @Length(3)
+    @Field(length = 3)
     private int age;
 
-    @Length(86)
+    @Field(length = 86)
     private String dataPadding;
 
-    @Length(1)
+    @Field(length = 1)
     private String trailerType;
 
-    @Length(99)
+    @Field(length = 99)
     private String trailerPadding;
 
-    private TestModel() {
+    private NoClassAnnotationModel() {
     }
 
-    private TestModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
+    private NoClassAnnotationModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
         final String name, final int age, final String dataPadding, final String trailerType, final String trailerPadding) {
         this.headerType = headerType;
         this.createAt = createAt;
@@ -53,8 +49,8 @@ public class TestModel {
         this.trailerPadding = trailerPadding;
     }
 
-    public static TestModelBuilder builder() {
-        return new TestModelBuilder();
+    public static NoClassAnnotationModelBuilder builder() {
+        return new NoClassAnnotationModelBuilder();
     }
 
     @Override
@@ -80,10 +76,10 @@ public class TestModel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final TestModel testModel = (TestModel) o;
-        return age == testModel.age && Objects.equals(headerType, testModel.headerType) && Objects.equals(createAt, testModel.createAt) && Objects.equals(headerPadding, testModel.headerPadding) && Objects.equals(
-            dataType, testModel.dataType) && Objects.equals(name, testModel.name) && Objects.equals(dataPadding, testModel.dataPadding) && Objects.equals(trailerType, testModel.trailerType) && Objects.equals(
-            trailerPadding, testModel.trailerPadding);
+        final NoClassAnnotationModel validModel = (NoClassAnnotationModel) o;
+        return age == validModel.age && Objects.equals(headerType, validModel.headerType) && Objects.equals(createAt, validModel.createAt) && Objects.equals(headerPadding, validModel.headerPadding) && Objects.equals(
+            dataType, validModel.dataType) && Objects.equals(name, validModel.name) && Objects.equals(dataPadding, validModel.dataPadding) && Objects.equals(trailerType, validModel.trailerType) && Objects.equals(
+            trailerPadding, validModel.trailerPadding);
     }
 
     @Override
@@ -91,7 +87,7 @@ public class TestModel {
         return Objects.hash(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
     }
 
-    public static class TestModelBuilder {
+    public static class NoClassAnnotationModelBuilder {
 
         private String headerType;
         private LocalDate createAt;
@@ -103,53 +99,53 @@ public class TestModel {
         private String trailerType;
         private String trailerPadding;
 
-        public TestModelBuilder headerType(final String headerType) {
+        public NoClassAnnotationModelBuilder headerType(final String headerType) {
             this.headerType = headerType;
             return this;
         }
 
-        public TestModelBuilder createAt(final LocalDate createAt) {
+        public NoClassAnnotationModelBuilder createAt(final LocalDate createAt) {
             this.createAt = createAt;
             return this;
         }
 
-        public TestModelBuilder headerPadding(final String headerPadding) {
+        public NoClassAnnotationModelBuilder headerPadding(final String headerPadding) {
             this.headerPadding = headerPadding;
             return this;
         }
 
-        public TestModelBuilder dataType(final String dataType) {
+        public NoClassAnnotationModelBuilder dataType(final String dataType) {
             this.dataType = dataType;
             return this;
         }
 
-        public TestModelBuilder name(final String name) {
+        public NoClassAnnotationModelBuilder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public TestModelBuilder age(final int age) {
+        public NoClassAnnotationModelBuilder age(final int age) {
             this.age = age;
             return this;
         }
 
-        public TestModelBuilder dataPadding(final String dataPadding) {
+        public NoClassAnnotationModelBuilder dataPadding(final String dataPadding) {
             this.dataPadding = dataPadding;
             return this;
         }
 
-        public TestModelBuilder trailerType(final String trailerType) {
+        public NoClassAnnotationModelBuilder trailerType(final String trailerType) {
             this.trailerType = trailerType;
             return this;
         }
 
-        public TestModelBuilder trailerPadding(final String trailerPadding) {
+        public NoClassAnnotationModelBuilder trailerPadding(final String trailerPadding) {
             this.trailerPadding = trailerPadding;
             return this;
         }
 
-        public TestModel build() {
-            return new TestModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
+        public NoClassAnnotationModel build() {
+            return new NoClassAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
 
     }

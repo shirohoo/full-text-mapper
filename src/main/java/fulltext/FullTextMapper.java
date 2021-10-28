@@ -1,10 +1,16 @@
 package fulltext;
 
+import fulltext.annotation.Field;
+import fulltext.annotation.FullText;
 import java.util.Optional;
 
 /**
  * <p>
- * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Length} must be properly declared in the object to be mapped.
+ * FullTextMapper mapping full text and Object to each other. In order to use it,{@link FullText} and, {@link Field} must be properly declared in the object to be mapped.
+ *
+ * @implSpec a class implementing this interface should be thread-safe and be able to handle the properties of {@link FullText} and {@link Field}.
+ * <p>
+ * In this case, Field property takes precedence over FullText.
  */
 public interface FullTextMapper {
 
@@ -27,7 +33,7 @@ public interface FullTextMapper {
     <T> Optional<T> readValue(final byte[] data, final Class<T> clazz);
 
     /**
-     * It takes an object as input, refers to {@link FullText} and {@link Length} declared, and creates full text and returns it.
+     * It takes an object as input, refers to {@link FullText} and {@link Field} declared, and creates full text and returns it.
      *
      * @param object want to output in full text
      * @return full text

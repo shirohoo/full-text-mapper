@@ -1,4 +1,4 @@
-package fulltext;
+package fulltext.enums;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
-public enum JavaType {
+public enum ClassCaster {
 
     STRING(String.class, data -> data),
     INT(int.class, Integer::valueOf),
@@ -16,23 +16,24 @@ public enum JavaType {
     DOUBLE(double.class, Double::valueOf),
     DOUBLE_WRAPPER(Double.class, Double::valueOf),
     LOCAL_DATE(LocalDate.class, data -> LocalDate.parse(data, DateTimeFormatter.BASIC_ISO_DATE)),
-    LOCAL_DATE_TIME(LocalDateTime.class, data -> LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))),
-    BIG_DECIMAL(BigDecimal.class, BigDecimal::new);
+    LOCAL_DATE_TIME(LocalDateTime.class, data -> LocalDateTime.parse(data, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))),
+    BIG_DECIMAL(BigDecimal.class, BigDecimal::new),
+    ;
 
     private final Class<?> clazz;
-    private final Function<String, ?> function;
+    private final Function<String, ?> castFunction;
 
-    JavaType(final Class<?> clazz, final Function<String, ?> function) {
+    ClassCaster(final Class<?> clazz, final Function<String, ?> castFunction) {
         this.clazz = clazz;
-        this.function = function;
+        this.castFunction = castFunction;
     }
 
     public Class<?> getClazz() {
         return clazz;
     }
 
-    public Function<String, ?> getFunction() {
-        return function;
+    public Function<String, ?> classCast() {
+        return castFunction;
     }
 
 }

@@ -1,16 +1,10 @@
-package fulltext;
-
-import static java.util.Arrays.stream;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+package fulltext.enums;
 
 public enum PadCharacter {
-    SPACE(" "),
-    ZERO("0");
 
-    private static final Map<PadCharacter, String> MAP = stream(values())
-        .collect(Collectors.toMap(Function.identity(), PadCharacter::getCharacter));
+    SPACE(" "),
+    ZERO("0"),
+    ;
 
     private final String character;
 
@@ -18,12 +12,12 @@ public enum PadCharacter {
         this.character = character;
     }
 
-    public String getCharacter() {
-        return character;
-    }
-
     public String leftPad(final String data, final int len) {
         return pad(len) + data;
+    }
+
+    public String rightPad(final String data, final int len) {
+        return data + pad(len);
     }
 
     public String pad(final int len) {
@@ -34,6 +28,13 @@ public enum PadCharacter {
 
     public String removeLeftPad(final String data) {
         return data.replaceFirst("^" + character + "*", "");
+    }
+
+    public String removeRightPad(String data) {
+        while (data.endsWith(character)) {
+            data = data.substring(0, data.lastIndexOf(character));
+        }
+        return data;
     }
 
 }
