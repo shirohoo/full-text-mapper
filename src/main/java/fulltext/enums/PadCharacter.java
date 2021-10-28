@@ -12,10 +12,6 @@ public enum PadCharacter {
         this.character = character;
     }
 
-    public String getCharacter() {
-        return character;
-    }
-
     public String leftPad(final String data, final int len) {
         return pad(len) + data;
     }
