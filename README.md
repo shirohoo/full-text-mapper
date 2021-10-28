@@ -87,6 +87,8 @@ dependencies {
 
 <br />
 
+- `FullTextMapper`의 구현체는 불변이며 스레드 세이프합니다.
+- `@Field`의 속성이 `@FullText`의 속성보다 더 우선적으로 적용됩니다.
 - `@FullText`에 선언된 `길이(length)`와 `각 필드에 선언된 @Field.length의 총합`이 일치하지 않을 경우 예외를 발생시킵니다.
 - 클래스 레벨에 `@FullText`가 누락돼있다면 예외를 발생시킵니다.
 - 필드 레벨에 `@Field`가 누락돼있다면 예외를 발생시킵니다.
@@ -101,35 +103,36 @@ dependencies {
 @FullText(
     length = 300,
     encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
-    padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
+    padChar = PadCharacter.SPACE, // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
+    padPosition = PadPosition.LEFT_PAD // 명시하지 않을 경우 기본적으로 왼쪽에 패딩문자를 채워넣습니다.
 )
-public class TestModel {
+public class ValidOptionModel {
 
-    @Field(length =  1)
+    @Field(length = 1)
     private String headerType;
 
-    @Field(length =  8)
+    @Field(length = 8)
     private LocalDate createAt; // yyyyMMdd
 
-    @Field(length =  91)
+    @Field(length = 91)
     private String headerPadding;
 
-    @Field(length =  1)
+    @Field(length = 1)
     private String dataType;
 
-    @Field(length =  10)
+    @Field(length = 10, padPosition = PadPosition.RIGHT_PAD) // @Field의 속성이 @FullText보다 우선됩니다.
     private String name;
 
-    @Field(length =  3)
+    @Field(length = 3, padChar = PadCharacter.ZERO) // @Field의 속성이 @FullText보다 우선됩니다.
     private int age;
 
-    @Field(length =  86)
+    @Field(length = 86)
     private String dataPadding;
 
-    @Field(length =  1)
+    @Field(length = 1)
     private String trailerType;
 
-    @Field(length =  99)
+    @Field(length = 99)
     private String trailerPadding;
 
 }
@@ -144,8 +147,8 @@ public class TestModel {
 <br />
 
 ```java
-FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
-Optional<TestModel> validModel = mapper.readValue(mockData(), TestModel.class);
+FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
+Optional<ValidModel> validModel = mapper.readValue(FullTextCreator.validData(), ValidModel.class);
 ```
 
 <br />
@@ -157,32 +160,12 @@ Optional<TestModel> validModel = mapper.readValue(mockData(), TestModel.class);
 ```java
 class LineFullTextMapperTest {
 
-    private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
 
     @Test
     void readValue() throws Exception {
-        Optional<TestModel> validModel = mapper.readValue(mockData(), TestModel.class);
-        assertThat(validModel.get()).isEqualTo(expectedModel());
-    }
-
-    private String mockData() {
-        return "120211011                                                                                           " +
-            "2      siro 28                                                                                      " +
-            "3                                                                                                   ";
-    }
-
-    private TestModel expectedModel() {
-        return TestModel.builder()
-            .headerType("1")
-            .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
-            .headerPadding("")
-            .dataType("2")
-            .name("siro")
-            .age(28)
-            .dataPadding("")
-            .trailerType("3")
-            .trailerPadding("")
-            .build();
+        Optional<ValidModel> actual = mapper.readValue(FullTextCreator.validData(), ValidModel.class);
+        assertThat(actual.get()).isEqualTo(ModelCreator.validModel());
     }
 
 }
@@ -197,8 +180,8 @@ class LineFullTextMapperTest {
 <br />
 
 ```java
-FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
-String fullText = mapper.write(expectedModel());
+FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
+String fullText = mapper.write(ModelCreator.validModel());
 ```
 
 <br />
@@ -210,31 +193,12 @@ String fullText = mapper.write(expectedModel());
 ```java
 class LineFullTextMapperTest {
 
-    private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
 
     @Test
     void write() throws Exception {
-        String actual = mapper.write(expectedModel());
-        assertThat(actual).isEqualTo(
-            "120211011                                                                                           "
-                + "2      siro 28                                                                                "
-                + "      3                                                                                       "
-                + "            "
-        );
-    }
-
-    private TestModel expectedModel() {
-        return TestModel.builder()
-            .headerType("1")
-            .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
-            .headerPadding("")
-            .dataType("2")
-            .name("siro")
-            .age(28)
-            .dataPadding("")
-            .trailerType("3")
-            .trailerPadding("")
-            .build();
+        String actual = mapper.write(ModelCreator.validModel());
+        assertThat(actual).isEqualTo(FullTextCreator.validModel());
     }
 
 }
