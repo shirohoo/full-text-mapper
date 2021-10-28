@@ -2,7 +2,6 @@ package fulltext.enums;
 
 public enum PadCharacter {
 
-    DEFAULT(" "),
     SPACE(" "),
     ZERO("0"),
     ;

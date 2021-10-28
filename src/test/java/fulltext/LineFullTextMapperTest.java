@@ -29,7 +29,7 @@ class LineFullTextMapperTest {
     @Test
     void readValue_exception_2() throws Exception {
         assertThatThrownBy(() -> mapper.readValue(FullTextCreator.validData(), InvalidClassAnnotationModel.class))
-            .hasMessage("There is a problem with setting the full text object. @FullText: 301, @Length total length: 300")
+            .hasMessage("There is a problem with setting the full text object. @FullText: 301, @Field total length: 300")
             .isInstanceOf(IllegalArgumentException.class);
     }
 

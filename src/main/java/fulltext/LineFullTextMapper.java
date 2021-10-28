@@ -3,14 +3,13 @@ package fulltext;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Objects.isNull;
+import fulltext.annotation.Field;
 import fulltext.annotation.FullText;
-import fulltext.annotation.Length;
 import fulltext.enums.Charset;
 import fulltext.enums.ClassCaster;
 import fulltext.enums.PadCharacter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +22,7 @@ import java.util.logging.Logger;
 
 /**
  * <p>
- * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Length} must be properly declared in the object to be mapped.
+ * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Field} must be properly declared in the object to be mapped.
  */
 public final class LineFullTextMapper implements FullTextMapper {
 
@@ -110,7 +109,7 @@ public final class LineFullTextMapper implements FullTextMapper {
 
         if (fullTextLen != fieldsLen) {
             throw new IllegalArgumentException(format(
-                "There is a problem with setting the full text object. @FullText: %d, @Length total length: %d",
+                "There is a problem with setting the full text object. @FullText: %d, @Field total length: %d",
                 fullTextLen, fieldsLen
             ));
         }
@@ -120,14 +119,14 @@ public final class LineFullTextMapper implements FullTextMapper {
         return stream(clazz.getDeclaredFields())
             .map(this::getAnnotation)
             .filter(Objects::nonNull)
-            .map(Length::value)
+            .map(Field::length)
             .reduce(0, Integer::sum);
     }
 
-    private Length getAnnotation(final Field field) {
-        Length annotation = field.getAnnotation(Length.class);
+    private Field getAnnotation(final java.lang.reflect.Field field) {
+        Field annotation = field.getAnnotation(Field.class);
         if (isNull(annotation)) {
-            throw new NoSuchElementException("Could not find @Length in argument object. please add @Length at field level.");
+            throw new NoSuchElementException("Could not find @Field in argument object. please add @Field at field level.");
         }
         return annotation;
     }
@@ -154,7 +153,7 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private <T> T setInstance(String line, final Class<T> clazz, final T instance) {
         try {
-            for (Field field : clazz.getDeclaredFields()) {
+            for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
                 line = dataBind(line, instance, field, getAnnotation(clazz).padChar());
             }
             if (line.length() != 0) {
@@ -168,8 +167,8 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
 
-    private <T> String dataBind(String data, final T instance, final Field field, final PadCharacter padCharacter) throws IllegalAccessException {
-        final int length = getAnnotation(field).value();
+    private <T> String dataBind(String data, final T instance, final java.lang.reflect.Field field, final PadCharacter padCharacter) throws IllegalAccessException {
+        final int length = getAnnotation(field).length();
 
         field.setAccessible(true);
 
@@ -188,7 +187,7 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     /**
-     * It takes an object as input, refers to {@link FullText} and {@link Length} declared, and creates full text and returns it.
+     * It takes an object as input, refers to {@link FullText} and {@link Field} declared, and creates full text and returns it.
      *
      * @param object want to output in full text
      * @return full text
@@ -200,7 +199,7 @@ public final class LineFullTextMapper implements FullTextMapper {
         verifyAnnotation(clazz);
 
         StringBuilder builder = new StringBuilder();
-        for (Field declaredField : clazz.getDeclaredFields()) {
+        for (java.lang.reflect.Field declaredField : clazz.getDeclaredFields()) {
             declaredField.setAccessible(true);
             Object field = getField(object, declaredField);
             if (isNull(field)) {
@@ -225,7 +224,7 @@ public final class LineFullTextMapper implements FullTextMapper {
         return builder.toString();
     }
 
-    private Object getField(final Object object, final Field declaredField) {
+    private Object getField(final Object object, final java.lang.reflect.Field declaredField) {
         Object field = null;
         try {
             field = declaredField.get(object);
@@ -236,8 +235,8 @@ public final class LineFullTextMapper implements FullTextMapper {
         return field;
     }
 
-    private int padLen(final Length length, final Object data) {
-        return length.value() - data.toString().length();
+    private int padLen(final Field field, final Object data) {
+        return field.length() - data.toString().length();
     }
 
     private void errorLogging(final Exception e) {

@@ -1,36 +1,36 @@
 package fulltext.model;
 
-import fulltext.annotation.Length;
+import fulltext.annotation.Field;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class NoClassAnnotationModel {
 
-    @Length(1)
+    @Field(length = 1)
     private String headerType;
 
-    @Length(8)
+    @Field(length = 8)
     private LocalDate createAt; // yyyyMMdd
 
-    @Length(91)
+    @Field(length = 91)
     private String headerPadding;
 
-    @Length(1)
+    @Field(length = 1)
     private String dataType;
 
-    @Length(10)
+    @Field(length = 10)
     private String name;
 
-    @Length(3)
+    @Field(length = 3)
     private int age;
 
-    @Length(86)
+    @Field(length = 86)
     private String dataPadding;
 
-    @Length(1)
+    @Field(length = 1)
     private String trailerType;
 
-    @Length(99)
+    @Field(length = 99)
     private String trailerPadding;
 
     private NoClassAnnotationModel() {

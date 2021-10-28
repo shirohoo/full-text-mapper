@@ -65,7 +65,7 @@ dependencies {
 
 **이때 `기본생성자`가 반드시 필요하며, `접근제한자`는 `private`이여도 괜찮습니다.**
 
-전문과 매핑될 클래스를 작성하고 `@FullText`를 클래스 레벨에, `@Length`를 필드 레벨에 정의합니다.
+전문과 매핑될 클래스를 작성하고 `@FullText`를 클래스 레벨에, `@Field`를 필드 레벨에 정의합니다.
 
 전문과 매핑할 클래스의 필드 타입을 기반으로 형변환 매핑합니다.
 
@@ -87,9 +87,9 @@ dependencies {
 
 <br />
 
-- `@FullText`에 선언된 `길이(length)`와 `각 필드에 선언된 @Length의 총합`이 일치하지 않을 경우 예외를 발생시킵니다.
-- 클래스 레벨에 `@FullText`가 선언돼있지 않으면 예외를 발생시킵니다.
-- 필드 레벨에 `@Legnth`가 누락돼있다면 예외를 발생시킵니다.
+- `@FullText`에 선언된 `길이(length)`와 `각 필드에 선언된 @Field.length의 총합`이 일치하지 않을 경우 예외를 발생시킵니다.
+- 클래스 레벨에 `@FullText`가 누락돼있다면 예외를 발생시킵니다.
+- 필드 레벨에 `@Field`가 누락돼있다면 예외를 발생시킵니다.
 
 <br />
 
@@ -105,31 +105,31 @@ dependencies {
 )
 public class TestModel {
 
-    @Length(1)
+    @Field(length =  1)
     private String headerType;
 
-    @Length(8)
+    @Field(length =  8)
     private LocalDate createAt; // yyyyMMdd
 
-    @Length(91)
+    @Field(length =  91)
     private String headerPadding;
 
-    @Length(1)
+    @Field(length =  1)
     private String dataType;
 
-    @Length(10)
+    @Field(length =  10)
     private String name;
 
-    @Length(3)
+    @Field(length =  3)
     private int age;
 
-    @Length(86)
+    @Field(length =  86)
     private String dataPadding;
 
-    @Length(1)
+    @Field(length =  1)
     private String trailerType;
 
-    @Length(99)
+    @Field(length =  99)
     private String trailerPadding;
 
 }
