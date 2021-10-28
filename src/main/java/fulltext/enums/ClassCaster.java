@@ -17,7 +17,8 @@ public enum ClassCaster {
     DOUBLE_WRAPPER(Double.class, Double::valueOf),
     LOCAL_DATE(LocalDate.class, data -> LocalDate.parse(data, DateTimeFormatter.BASIC_ISO_DATE)),
     LOCAL_DATE_TIME(LocalDateTime.class, data -> LocalDateTime.parse(data, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))),
-    BIG_DECIMAL(BigDecimal.class, BigDecimal::new);
+    BIG_DECIMAL(BigDecimal.class, BigDecimal::new),
+    ;
 
     private final Class<?> clazz;
     private final Function<String, ?> castFunction;

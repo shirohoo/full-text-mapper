@@ -1,16 +1,11 @@
 package fulltext.enums;
 
-import static java.util.Arrays.stream;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 public enum PadCharacter {
-    SPACE(" "),
-    ZERO("0");
 
-    private static final Map<PadCharacter, String> MAP = stream(values())
-        .collect(Collectors.toMap(Function.identity(), PadCharacter::getCharacter));
+    DEFAULT(" "),
+    SPACE(" "),
+    ZERO("0"),
+    ;
 
     private final String character;
 
@@ -46,4 +41,5 @@ public enum PadCharacter {
         }
         return data;
     }
+
 }

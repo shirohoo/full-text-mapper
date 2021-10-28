@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public enum Charset {
 
+    DEFAULT("UTF-8"),
     UTF_8("UTF-8"),
     EUC_KR("EUC-KR"),
     ;
