@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class LineFullTextMapperTest {
 
-    private FullTextMapper mapper = FullTextMapperFactory.getLineFullTextMapper();
+    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
 
     @Test
     void readValue() throws Exception {

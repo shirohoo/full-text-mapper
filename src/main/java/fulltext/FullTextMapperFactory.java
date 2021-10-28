@@ -5,7 +5,11 @@ public class FullTextMapperFactory {
     private FullTextMapperFactory() {
     }
 
-    public static FullTextMapper getLineFullTextMapper() {
+    /**
+     *
+     * @return
+     */
+    public static FullTextMapper lineFullTextMapper() {
         return LineFullTextMapperHolder.instance;
     }
 
