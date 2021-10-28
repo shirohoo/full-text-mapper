@@ -6,6 +6,7 @@ import fulltext.fixture.FullTextCreator;
 import fulltext.fixture.ModelCreator;
 import fulltext.model.InvalidClassAnnotationModel;
 import fulltext.model.ValidModel;
+import fulltext.model.ValidOptionModel;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,12 @@ class LineFullTextMapperTest {
     void readValue() throws Exception {
         Optional<ValidModel> actual = mapper.readValue(FullTextCreator.validData(), ValidModel.class);
         assertThat(actual.get()).isEqualTo(ModelCreator.validModel());
+    }
+
+    @Test
+    void readValue_option() throws Exception {
+        Optional<ValidOptionModel> actual = mapper.readValue(FullTextCreator.validOptionData(), ValidOptionModel.class);
+        assertThat(actual.get()).isEqualTo(ModelCreator.validOptionModel());
     }
 
     @Test
@@ -39,5 +46,10 @@ class LineFullTextMapperTest {
         assertThat(actual).isEqualTo(FullTextCreator.validModel());
     }
 
+    @Test
+    void write_option() throws Exception {
+        String actual = mapper.write(ModelCreator.validOptionModel());
+        assertThat(actual).isEqualTo(FullTextCreator.validOptionData());
+    }
 
 }
