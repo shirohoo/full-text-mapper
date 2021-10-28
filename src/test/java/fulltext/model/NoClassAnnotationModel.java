@@ -49,8 +49,8 @@ public class NoClassAnnotationModel {
         this.trailerPadding = trailerPadding;
     }
 
-    public static TestModelBuilder builder() {
-        return new TestModelBuilder();
+    public static NoClassAnnotationModelBuilder builder() {
+        return new NoClassAnnotationModelBuilder();
     }
 
     @Override
@@ -87,7 +87,7 @@ public class NoClassAnnotationModel {
         return Objects.hash(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
     }
 
-    public static class TestModelBuilder {
+    public static class NoClassAnnotationModelBuilder {
 
         private String headerType;
         private LocalDate createAt;
@@ -99,47 +99,47 @@ public class NoClassAnnotationModel {
         private String trailerType;
         private String trailerPadding;
 
-        public TestModelBuilder headerType(final String headerType) {
+        public NoClassAnnotationModelBuilder headerType(final String headerType) {
             this.headerType = headerType;
             return this;
         }
 
-        public TestModelBuilder createAt(final LocalDate createAt) {
+        public NoClassAnnotationModelBuilder createAt(final LocalDate createAt) {
             this.createAt = createAt;
             return this;
         }
 
-        public TestModelBuilder headerPadding(final String headerPadding) {
+        public NoClassAnnotationModelBuilder headerPadding(final String headerPadding) {
             this.headerPadding = headerPadding;
             return this;
         }
 
-        public TestModelBuilder dataType(final String dataType) {
+        public NoClassAnnotationModelBuilder dataType(final String dataType) {
             this.dataType = dataType;
             return this;
         }
 
-        public TestModelBuilder name(final String name) {
+        public NoClassAnnotationModelBuilder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public TestModelBuilder age(final int age) {
+        public NoClassAnnotationModelBuilder age(final int age) {
             this.age = age;
             return this;
         }
 
-        public TestModelBuilder dataPadding(final String dataPadding) {
+        public NoClassAnnotationModelBuilder dataPadding(final String dataPadding) {
             this.dataPadding = dataPadding;
             return this;
         }
 
-        public TestModelBuilder trailerType(final String trailerType) {
+        public NoClassAnnotationModelBuilder trailerType(final String trailerType) {
             this.trailerType = trailerType;
             return this;
         }
 
-        public TestModelBuilder trailerPadding(final String trailerPadding) {
+        public NoClassAnnotationModelBuilder trailerPadding(final String trailerPadding) {
             this.trailerPadding = trailerPadding;
             return this;
         }

@@ -57,8 +57,8 @@ public class ValidModel {
         this.trailerPadding = trailerPadding;
     }
 
-    public static TestModelBuilder builder() {
-        return new TestModelBuilder();
+    public static ValidModelBuilder builder() {
+        return new ValidModelBuilder();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ValidModel {
         return Objects.hash(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
     }
 
-    public static class TestModelBuilder {
+    public static class ValidModelBuilder {
 
         private String headerType;
         private LocalDate createAt;
@@ -107,47 +107,47 @@ public class ValidModel {
         private String trailerType;
         private String trailerPadding;
 
-        public TestModelBuilder headerType(final String headerType) {
+        public ValidModelBuilder headerType(final String headerType) {
             this.headerType = headerType;
             return this;
         }
 
-        public TestModelBuilder createAt(final LocalDate createAt) {
+        public ValidModelBuilder createAt(final LocalDate createAt) {
             this.createAt = createAt;
             return this;
         }
 
-        public TestModelBuilder headerPadding(final String headerPadding) {
+        public ValidModelBuilder headerPadding(final String headerPadding) {
             this.headerPadding = headerPadding;
             return this;
         }
 
-        public TestModelBuilder dataType(final String dataType) {
+        public ValidModelBuilder dataType(final String dataType) {
             this.dataType = dataType;
             return this;
         }
 
-        public TestModelBuilder name(final String name) {
+        public ValidModelBuilder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public TestModelBuilder age(final int age) {
+        public ValidModelBuilder age(final int age) {
             this.age = age;
             return this;
         }
 
-        public TestModelBuilder dataPadding(final String dataPadding) {
+        public ValidModelBuilder dataPadding(final String dataPadding) {
             this.dataPadding = dataPadding;
             return this;
         }
 
-        public TestModelBuilder trailerType(final String trailerType) {
+        public ValidModelBuilder trailerType(final String trailerType) {
             this.trailerType = trailerType;
             return this;
         }
 
-        public TestModelBuilder trailerPadding(final String trailerPadding) {
+        public ValidModelBuilder trailerPadding(final String trailerPadding) {
             this.trailerPadding = trailerPadding;
             return this;
         }
