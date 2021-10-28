@@ -170,7 +170,7 @@ public final class LineFullTextMapper implements FullTextMapper {
 
         for (ClassCaster classCaster : ClassCaster.values()) {
             if (field.getType().equals(classCaster.getClazz())) {
-                Function<String, ?> typeCasting = classCaster.getCastFunction();
+                Function<String, ?> typeCasting = classCaster.castFunction();
                 field.set(instance, typeCasting.apply(slice(data, length, padCharacter)));
                 data = data.substring(length);
             }
