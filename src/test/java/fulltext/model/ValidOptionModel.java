@@ -11,7 +11,8 @@ import java.util.Objects;
 @FullText(
     length = 300,
     encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
-    padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
+    padChar = PadCharacter.SPACE, // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
+    padPosition = PadPosition.LEFT_PAD // 명시하지 않을 경우 기본적으로 왼쪽에 패딩문자를 채워넣습니다.
 )
 public class ValidOptionModel {
 
@@ -27,10 +28,10 @@ public class ValidOptionModel {
     @Field(length = 1)
     private String dataType;
 
-    @Field(length = 10, padPosition = PadPosition.RIGHT_PAD)
+    @Field(length = 10, padPosition = PadPosition.RIGHT_PAD) // @Field의 속성이 @FullText보다 우선됩니다.
     private String name;
 
-    @Field(length = 3, padChar = PadCharacter.ZERO)
+    @Field(length = 3, padChar = PadCharacter.ZERO) // @Field의 속성이 @FullText보다 우선됩니다.
     private int age;
 
     @Field(length = 86)
