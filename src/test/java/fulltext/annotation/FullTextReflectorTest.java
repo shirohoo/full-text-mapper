@@ -110,16 +110,6 @@ class FullTextReflectorTest {
             .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    void isSupported_Class() throws Exception {
-        assertThat(FullTextReflector.isSupported(ValidModel.class)).isTrue();
-    }
-
-    @Test
-    void isSupported_Field() throws Exception {
-        assertThat(FullTextReflector.isSupported(validField())).isTrue();
-    }
-
     private static java.lang.reflect.Field validField() throws Exception {
         final Class<?> clazz = Class.forName("fulltext.model.ValidModel");
         return clazz.getDeclaredField("headerType");
