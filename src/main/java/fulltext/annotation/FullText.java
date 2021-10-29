@@ -21,21 +21,25 @@ public @interface FullText {
 
     /**
      * Means the total length of one line in full text.
+     * @return a total length of full text
      */
     int length();
 
     /**
      * Set how to encode full text. The default is UTF-8.
+     * @return {@link Charset}
      */
     Charset encoding() default Charset.UTF_8;
 
     /**
      * Sets the padding character to be used in full text. The default is a space character(" ").
+     * @return {@link PadCharacter}
      */
     PadCharacter padChar() default PadCharacter.SPACE;
 
     /**
      * Determines whether the pad is padded on the left or on the right. default is left.
+     * @return {@link PadPosition}
      */
     PadPosition padPosition() default PadPosition.LEFT_PAD;
 
