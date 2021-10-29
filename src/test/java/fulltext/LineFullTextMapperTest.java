@@ -29,7 +29,7 @@ class LineFullTextMapperTest {
     @Test
     void readValue_exception_1() throws Exception {
         assertThatThrownBy(() -> mapper.readValue(FullTextCreator.validData(), null))
-            .hasMessage("clazz is must not be null.")
+            .hasMessage("Class is must not be null.")
             .isInstanceOf(NullPointerException.class);
     }
 

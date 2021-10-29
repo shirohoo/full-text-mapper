@@ -19,6 +19,7 @@ public interface FullTextMapper {
      *
      * @param data  full text of string type
      * @param clazz map to full text
+     * @param <T> class in which {@link FullText} and {@link Field} are declared
      * @return instance of Optional{@literal <}T{@literal >}
      */
     <T> Optional<T> readValue(final String data, final Class<T> clazz);
@@ -28,6 +29,7 @@ public interface FullTextMapper {
      *
      * @param data  full text of byte array type
      * @param clazz map to full text
+     * @param <T> class in which {@link FullText} and {@link Field} are declared
      * @return instance of Optional{@literal <}T{@literal >}
      */
     <T> Optional<T> readValue(final byte[] data, final Class<T> clazz);
