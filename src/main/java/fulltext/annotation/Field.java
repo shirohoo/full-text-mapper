@@ -31,12 +31,12 @@ public @interface Field {
      * padChar of this field. default is PadCharacter.SPACE
      * @return {@link PadCharacter}
      */
-    PadCharacter padChar() default PadCharacter.SPACE;
+    PadCharacter padChar() default PadCharacter.NONE;
 
     /**
      * padPosition of this field. default is PadPosition.LEFT_PAD
      * @return {@link PadPosition}
      */
-    PadPosition padPosition() default PadPosition.LEFT_PAD;
+    PadPosition padPosition() default PadPosition.NONE;
 
 }
