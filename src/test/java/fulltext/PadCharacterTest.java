@@ -11,6 +11,20 @@ class PadCharacterTest {
 
     @MethodSource
     @ParameterizedTest
+    void isNone(final PadCharacter padCharacter, final boolean expected) throws Exception {
+        assertThat(padCharacter.isNone()).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> isNone() {
+        return Stream.of(
+            Arguments.of(PadCharacter.NONE, true),
+            Arguments.of(PadCharacter.SPACE, false),
+            Arguments.of(PadCharacter.ZERO, false)
+        );
+    }
+
+    @MethodSource
+    @ParameterizedTest
     void pad(final PadCharacter padCharacter, final int padLen, final String expected) throws Exception {
         String actual = padCharacter.pad(padLen);
         assertThat(actual).isEqualTo(expected);
