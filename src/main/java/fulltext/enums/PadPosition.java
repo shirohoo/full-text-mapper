@@ -2,6 +2,7 @@ package fulltext.enums;
 
 public enum PadPosition {
 
+    NONE,
     LEFT_PAD,
     RIGHT_PAD,
     ;
