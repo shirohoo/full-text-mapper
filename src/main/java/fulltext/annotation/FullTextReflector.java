@@ -86,7 +86,14 @@ public final class FullTextReflector {
     public static PadCharacter getPadCharacter(final FullText classAnnotation, final Field fieldAnnotation) {
         final PadCharacter cpc = classAnnotation.padChar();
         final PadCharacter fpc = fieldAnnotation.padChar();
-        return cpc.equals(fpc) ? cpc : fpc;
+
+        if (fpc.isNone()) {
+            return cpc;
+        }
+        if (cpc.equals(fpc)) {
+            return cpc;
+        }
+        return fpc;
     }
 
     /**
@@ -99,7 +106,14 @@ public final class FullTextReflector {
     public static PadPosition getPadPosition(final FullText classAnnotation, final Field fieldAnnotation) {
         final PadPosition cpp = classAnnotation.padPosition();
         final PadPosition fpp = fieldAnnotation.padPosition();
-        return cpp.equals(fpp) ? cpp : fpp;
+
+        if (fpp.isNone()) {
+            return cpp;
+        }
+        if (cpp.equals(fpp)) {
+            return cpp;
+        }
+        return fpp;
     }
 
     /**
