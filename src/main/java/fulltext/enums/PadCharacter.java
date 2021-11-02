@@ -13,6 +13,10 @@ public enum PadCharacter {
         this.character = character;
     }
 
+    public boolean isNone() {
+        return this == NONE;
+    }
+
     public String leftPad(final String data, final int len) {
         return pad(len) + data;
     }
