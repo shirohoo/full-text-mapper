@@ -7,6 +7,10 @@ public enum PadPosition {
     RIGHT_PAD,
     ;
 
+    public boolean isNone() {
+        return this == NONE;
+    }
+
     public boolean isLeft() {
         return this == LEFT_PAD;
     }
