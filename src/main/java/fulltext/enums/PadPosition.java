@@ -3,8 +3,8 @@ package fulltext.enums;
 public enum PadPosition {
 
     NONE,
-    LEFT_PAD,
-    RIGHT_PAD,
+    LEFT,
+    RIGHT,
     ;
 
     public boolean isNone() {
@@ -12,7 +12,7 @@ public enum PadPosition {
     }
 
     public boolean isLeft() {
-        return this == LEFT_PAD;
+        return this == LEFT;
     }
 
 }

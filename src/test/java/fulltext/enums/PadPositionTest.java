@@ -17,8 +17,8 @@ class PadPositionTest {
     private static Stream<Arguments> isNone() {
         return Stream.of(
             Arguments.of(PadPosition.NONE, true),
-            Arguments.of(PadPosition.LEFT_PAD, false),
-            Arguments.of(PadPosition.RIGHT_PAD, false)
+            Arguments.of(PadPosition.LEFT, false),
+            Arguments.of(PadPosition.RIGHT, false)
         );
     }
 
@@ -31,8 +31,8 @@ class PadPositionTest {
     private static Stream<Arguments> isLeft() {
         return Stream.of(
             Arguments.of(PadPosition.NONE, false),
-            Arguments.of(PadPosition.LEFT_PAD, true),
-            Arguments.of(PadPosition.RIGHT_PAD, false)
+            Arguments.of(PadPosition.LEFT, true),
+            Arguments.of(PadPosition.RIGHT, false)
         );
     }
 

@@ -93,7 +93,7 @@ class FullTextReflectorTest {
         final PadPosition padPosition = FullTextReflector.getPadPosition(classAnnotation, fieldAnnotation);
 
         // then
-        assertThat(padPosition).isEqualTo(PadPosition.RIGHT_PAD);
+        assertThat(padPosition).isEqualTo(PadPosition.RIGHT);
     }
 
     @Test

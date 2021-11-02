@@ -41,6 +41,6 @@ public @interface FullText {
      * Determines whether the pad is padded on the left or on the right. default is left.
      * @return {@link PadPosition}
      */
-    PadPosition padPosition() default PadPosition.LEFT_PAD;
+    PadPosition padPosition() default PadPosition.LEFT;
 
 }
