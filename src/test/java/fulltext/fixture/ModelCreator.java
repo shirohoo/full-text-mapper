@@ -1,9 +1,9 @@
 package fulltext.fixture;
 
-import fulltext.model.InvalidClassAnnotationModel;
-import fulltext.model.NoClassAnnotationModel;
-import fulltext.model.ValidModel;
-import fulltext.model.ValidOptionModel;
+import fulltext.fixture.model.InvalidClassAnnotationModel;
+import fulltext.fixture.model.NoClassAnnotationModel;
+import fulltext.fixture.model.ValidModel;
+import fulltext.fixture.model.ValidOptionModel;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 

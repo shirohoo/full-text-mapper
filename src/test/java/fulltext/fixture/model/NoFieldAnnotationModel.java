@@ -1,8 +1,7 @@
-package fulltext.model;
+package fulltext.fixture.model;
 
-import fulltext.annotation.Field;
-import fulltext.enums.Charset;
 import fulltext.annotation.FullText;
+import fulltext.enums.Charset;
 import fulltext.enums.PadCharacter;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -12,39 +11,30 @@ import java.util.Objects;
     encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
     padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
 )
-public class ValidModel {
+public class NoFieldAnnotationModel {
 
-    @Field(length = 1)
     private String headerType;
 
-    @Field(length = 8)
     private LocalDate createAt; // yyyyMMdd
 
-    @Field(length = 91)
     private String headerPadding;
 
-    @Field(length = 1)
     private String dataType;
 
-    @Field(length = 10)
     private String name;
 
-    @Field(length = 3)
     private int age;
 
-    @Field(length = 86)
     private String dataPadding;
 
-    @Field(length = 1)
     private String trailerType;
 
-    @Field(length = 99)
     private String trailerPadding;
 
-    private ValidModel() {
+    private NoFieldAnnotationModel() {
     }
 
-    private ValidModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
+    private NoFieldAnnotationModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
         final String name, final int age, final String dataPadding, final String trailerType, final String trailerPadding) {
         this.headerType = headerType;
         this.createAt = createAt;
@@ -84,7 +74,7 @@ public class ValidModel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ValidModel validModel = (ValidModel) o;
+        final NoFieldAnnotationModel validModel = (NoFieldAnnotationModel) o;
         return age == validModel.age && Objects.equals(headerType, validModel.headerType) && Objects.equals(createAt, validModel.createAt) && Objects.equals(headerPadding, validModel.headerPadding) && Objects.equals(
             dataType, validModel.dataType) && Objects.equals(name, validModel.name) && Objects.equals(dataPadding, validModel.dataPadding) && Objects.equals(trailerType, validModel.trailerType) && Objects.equals(
             trailerPadding, validModel.trailerPadding);
@@ -152,8 +142,8 @@ public class ValidModel {
             return this;
         }
 
-        public ValidModel build() {
-            return new ValidModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
+        public NoFieldAnnotationModel build() {
+            return new NoFieldAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
 
     }

@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import fulltext.fixture.FullTextCreator;
 import fulltext.fixture.ModelCreator;
-import fulltext.model.InvalidClassAnnotationModel;
-import fulltext.model.ValidModel;
-import fulltext.model.ValidOptionModel;
+import fulltext.fixture.model.InvalidClassAnnotationModel;
+import fulltext.fixture.model.ValidModel;
+import fulltext.fixture.model.ValidOptionModel;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
