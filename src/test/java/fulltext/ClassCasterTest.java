@@ -26,8 +26,7 @@ class ClassCasterTest {
     @MethodSource
     @ParameterizedTest
     void castFunction(final String data, final Function<String, ?> castFunction, final Object expected) throws Exception {
-        Object actual = castFunction.apply(data);
-        assertThat(actual).isEqualTo(expected);
+        assertThat(castFunction.apply(data)).isEqualTo(expected);
     }
 
     private static Stream<Arguments> castFunction() {

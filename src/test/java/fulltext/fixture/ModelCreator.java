@@ -9,8 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 public final class ModelCreator {
 
-    public static ValidModel validModel() {
-        return ValidModel.builder()
+    public static final ValidModel VALID_MODEL =
+        ValidModel.builder()
             .headerType("1")
             .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
             .headerPadding("")
@@ -21,10 +21,9 @@ public final class ModelCreator {
             .trailerType("3")
             .trailerPadding("")
             .build();
-    }
 
-    public static ValidOptionModel validOptionModel() {
-        return ValidOptionModel.builder()
+    public static final ValidOptionModel VALID_OPTION_MODEL =
+        ValidOptionModel.builder()
             .headerType("1")
             .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
             .headerPadding("")
@@ -35,10 +34,9 @@ public final class ModelCreator {
             .trailerType("3")
             .trailerPadding("")
             .build();
-    }
 
-    public static InvalidClassAnnotationModel invalidClassAnnotationModel() {
-        return InvalidClassAnnotationModel.builder()
+    public static final InvalidClassAnnotationModel INVALID_CLASS_ANNOTATION_MODEL =
+        InvalidClassAnnotationModel.builder()
             .headerType("1")
             .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
             .headerPadding("")
@@ -49,10 +47,9 @@ public final class ModelCreator {
             .trailerType("3")
             .trailerPadding("")
             .build();
-    }
 
-    public static NoClassAnnotationModel noClassAnnotationModel() {
-        return NoClassAnnotationModel.builder()
+    public static final NoClassAnnotationModel NO_CLASS_ANNOTATION_MODEL =
+        NoClassAnnotationModel.builder()
             .headerType("1")
             .createAt(LocalDate.parse("20211011", DateTimeFormatter.BASIC_ISO_DATE))
             .headerPadding("")
@@ -63,6 +60,5 @@ public final class ModelCreator {
             .trailerType("3")
             .trailerPadding("")
             .build();
-    }
 
 }
