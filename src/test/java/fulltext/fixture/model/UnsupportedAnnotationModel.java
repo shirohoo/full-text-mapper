@@ -1,50 +1,50 @@
-package fulltext.model;
+package fulltext.fixture.model;
 
 import fulltext.annotation.Field;
-import fulltext.enums.Charset;
 import fulltext.annotation.FullText;
+import fulltext.enums.Charset;
 import fulltext.enums.PadCharacter;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @FullText(
-    length = 301,
-    encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
-    padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
+    length = 300,
+    encoding = Charset.UTF_8,
+    padChar = PadCharacter.NONE // @Field도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
 )
-public class InvalidClassAnnotationModel {
+public class UnsupportedAnnotationModel {
 
-    @Field(length = 1)
+    @Field(length = 1, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String headerType;
 
-    @Field(length = 8)
+    @Field(length = 8, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private LocalDate createAt; // yyyyMMdd
 
-    @Field(length = 91)
+    @Field(length = 91, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String headerPadding;
 
-    @Field(length = 1)
+    @Field(length = 1, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String dataType;
 
-    @Field(length = 10)
+    @Field(length = 10, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String name;
 
-    @Field(length = 3)
+    @Field(length = 3, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private int age;
 
-    @Field(length = 86)
+    @Field(length = 86, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String dataPadding;
 
-    @Field(length = 1)
+    @Field(length = 1, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String trailerType;
 
-    @Field(length = 99)
+    @Field(length = 99, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String trailerPadding;
 
-    private InvalidClassAnnotationModel() {
+    private UnsupportedAnnotationModel() {
     }
 
-    private InvalidClassAnnotationModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
+    private UnsupportedAnnotationModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
         final String name, final int age, final String dataPadding, final String trailerType, final String trailerPadding) {
         this.headerType = headerType;
         this.createAt = createAt;
@@ -57,8 +57,8 @@ public class InvalidClassAnnotationModel {
         this.trailerPadding = trailerPadding;
     }
 
-    public static InvalidClassAnnotationModelBuilder builder() {
-        return new InvalidClassAnnotationModelBuilder();
+    public static UnsupportedAnnotationModelBuilder builder() {
+        return new UnsupportedAnnotationModelBuilder();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class InvalidClassAnnotationModel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final InvalidClassAnnotationModel validModel = (InvalidClassAnnotationModel) o;
+        final UnsupportedAnnotationModel validModel = (UnsupportedAnnotationModel) o;
         return age == validModel.age && Objects.equals(headerType, validModel.headerType) && Objects.equals(createAt, validModel.createAt) && Objects.equals(headerPadding, validModel.headerPadding) && Objects.equals(
             dataType, validModel.dataType) && Objects.equals(name, validModel.name) && Objects.equals(dataPadding, validModel.dataPadding) && Objects.equals(trailerType, validModel.trailerType) && Objects.equals(
             trailerPadding, validModel.trailerPadding);
@@ -95,7 +95,7 @@ public class InvalidClassAnnotationModel {
         return Objects.hash(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
     }
 
-    public static class InvalidClassAnnotationModelBuilder {
+    public static class UnsupportedAnnotationModelBuilder {
 
         private String headerType;
         private LocalDate createAt;
@@ -107,53 +107,53 @@ public class InvalidClassAnnotationModel {
         private String trailerType;
         private String trailerPadding;
 
-        public InvalidClassAnnotationModelBuilder headerType(final String headerType) {
+        public UnsupportedAnnotationModelBuilder headerType(final String headerType) {
             this.headerType = headerType;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder createAt(final LocalDate createAt) {
+        public UnsupportedAnnotationModelBuilder createAt(final LocalDate createAt) {
             this.createAt = createAt;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder headerPadding(final String headerPadding) {
+        public UnsupportedAnnotationModelBuilder headerPadding(final String headerPadding) {
             this.headerPadding = headerPadding;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder dataType(final String dataType) {
+        public UnsupportedAnnotationModelBuilder dataType(final String dataType) {
             this.dataType = dataType;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder name(final String name) {
+        public UnsupportedAnnotationModelBuilder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder age(final int age) {
+        public UnsupportedAnnotationModelBuilder age(final int age) {
             this.age = age;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder dataPadding(final String dataPadding) {
+        public UnsupportedAnnotationModelBuilder dataPadding(final String dataPadding) {
             this.dataPadding = dataPadding;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder trailerType(final String trailerType) {
+        public UnsupportedAnnotationModelBuilder trailerType(final String trailerType) {
             this.trailerType = trailerType;
             return this;
         }
 
-        public InvalidClassAnnotationModelBuilder trailerPadding(final String trailerPadding) {
+        public UnsupportedAnnotationModelBuilder trailerPadding(final String trailerPadding) {
             this.trailerPadding = trailerPadding;
             return this;
         }
 
-        public InvalidClassAnnotationModel build() {
-            return new InvalidClassAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
+        public UnsupportedAnnotationModel build() {
+            return new UnsupportedAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
 
     }

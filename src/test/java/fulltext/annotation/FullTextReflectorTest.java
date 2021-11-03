@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import fulltext.enums.Charset;
 import fulltext.enums.PadCharacter;
 import fulltext.enums.PadPosition;
-import fulltext.model.InvalidClassAnnotationModel;
-import fulltext.model.NoClassAnnotationModel;
-import fulltext.model.ValidModel;
-import fulltext.model.ValidOptionModel;
+import fulltext.fixture.model.InvalidClassAnnotationModel;
+import fulltext.fixture.model.NoClassAnnotationModel;
+import fulltext.fixture.model.ValidModel;
+import fulltext.fixture.model.ValidOptionModel;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
@@ -93,7 +93,7 @@ class FullTextReflectorTest {
         final PadPosition padPosition = FullTextReflector.getPadPosition(classAnnotation, fieldAnnotation);
 
         // then
-        assertThat(padPosition).isEqualTo(PadPosition.RIGHT_PAD);
+        assertThat(padPosition).isEqualTo(PadPosition.RIGHT);
     }
 
     @Test
@@ -111,22 +111,22 @@ class FullTextReflectorTest {
     }
 
     private static java.lang.reflect.Field validField() throws Exception {
-        final Class<?> clazz = Class.forName("fulltext.model.ValidModel");
+        final Class<?> clazz = Class.forName("fulltext.fixture.model.ValidModel");
         return clazz.getDeclaredField("headerType");
     }
 
     private static java.lang.reflect.Field validOptionAgeField() throws Exception {
-        final Class<?> clazz = Class.forName("fulltext.model.ValidOptionModel");
+        final Class<?> clazz = Class.forName("fulltext.fixture.model.ValidOptionModel");
         return clazz.getDeclaredField("age");
     }
 
     private static java.lang.reflect.Field validOptionNameField() throws Exception {
-        final Class<?> clazz = Class.forName("fulltext.model.ValidOptionModel");
+        final Class<?> clazz = Class.forName("fulltext.fixture.model.ValidOptionModel");
         return clazz.getDeclaredField("name");
     }
 
     private static java.lang.reflect.Field invalidField() throws Exception {
-        final Class<?> clazz = Class.forName("fulltext.model.NoFieldAnnotationModel");
+        final Class<?> clazz = Class.forName("fulltext.fixture.model.NoFieldAnnotationModel");
         return clazz.getDeclaredField("headerType");
     }
 

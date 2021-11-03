@@ -2,6 +2,7 @@ package fulltext.enums;
 
 public enum PadCharacter {
 
+    NONE(""),
     SPACE(" "),
     ZERO("0"),
     ;
@@ -10,6 +11,10 @@ public enum PadCharacter {
 
     PadCharacter(final String character) {
         this.character = character;
+    }
+
+    public boolean isNone() {
+        return this == NONE;
     }
 
     public String leftPad(final String data, final int len) {

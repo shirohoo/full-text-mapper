@@ -137,7 +137,7 @@ public final class LineFullTextMapper implements FullTextMapper {
         for (ClassCaster classCaster : ClassCaster.values()) {
             if (field.getType().equals(classCaster.getClazz())) {
                 String value = removePad(data, padCharacter, padPosition, getLength(field));
-                field.set(instance, classCaster.classCast().apply(value));
+                field.set(instance, classCaster.getFunction().apply(value));
                 data = data.substring(getLength(field));
             }
         }

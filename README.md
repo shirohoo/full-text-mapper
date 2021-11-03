@@ -37,13 +37,17 @@
 
 # ⚙ 사용 방법
 
+이 모듈은 순수하게 자바 1.8로 작성됐습니다. 
+
+따라서 요구하는 최소한의 자바 버전은 1.8입니다.
+
 ## 📜 Maven
 ```xml
 <!--pom.xml-->
 <dependency>
   <groupId>io.github.shirohoo</groupId>
   <artifactId>full-text-mapper</artifactId>
-  <version>1.2</version>
+  <version>1.3</version>
 </dependency>
 ```
 
@@ -55,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.shirohoo:full-text-mapper:1.2'
+    implementation 'io.github.shirohoo:full-text-mapper:1.3'
 }
 ```
 
@@ -92,6 +96,7 @@ dependencies {
 - `@FullText`에 선언된 `길이(length)`와 `각 필드에 선언된 @Field.length의 총합`이 일치하지 않을 경우 예외를 발생시킵니다.
 - 클래스 레벨에 `@FullText`가 누락돼있다면 예외를 발생시킵니다.
 - 필드 레벨에 `@Field`가 누락돼있다면 예외를 발생시킵니다.
+- `@FullText`와 `@Field`의 속성들 (`PadPosition`, `PadCharacter`)이 모두 `NONE`이면 예외를 발생시킵니다.
 
 <br />
 

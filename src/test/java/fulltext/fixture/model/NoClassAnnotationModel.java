@@ -1,18 +1,10 @@
-package fulltext.model;
+package fulltext.fixture.model;
 
 import fulltext.annotation.Field;
-import fulltext.enums.Charset;
-import fulltext.annotation.FullText;
-import fulltext.enums.PadCharacter;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@FullText(
-    length = 300,
-    encoding = Charset.UTF_8, // 명시하지 않을 경우 기본값은 UTF-8입니다.
-    padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
-)
-public class ValidModel {
+public class NoClassAnnotationModel {
 
     @Field(length = 1)
     private String headerType;
@@ -41,10 +33,10 @@ public class ValidModel {
     @Field(length = 99)
     private String trailerPadding;
 
-    private ValidModel() {
+    private NoClassAnnotationModel() {
     }
 
-    private ValidModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
+    private NoClassAnnotationModel(final String headerType, final LocalDate createAt, final String headerPadding, final String dataType,
         final String name, final int age, final String dataPadding, final String trailerType, final String trailerPadding) {
         this.headerType = headerType;
         this.createAt = createAt;
@@ -57,8 +49,8 @@ public class ValidModel {
         this.trailerPadding = trailerPadding;
     }
 
-    public static ValidModelBuilder builder() {
-        return new ValidModelBuilder();
+    public static NoClassAnnotationModelBuilder builder() {
+        return new NoClassAnnotationModelBuilder();
     }
 
     @Override
@@ -84,7 +76,7 @@ public class ValidModel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ValidModel validModel = (ValidModel) o;
+        final NoClassAnnotationModel validModel = (NoClassAnnotationModel) o;
         return age == validModel.age && Objects.equals(headerType, validModel.headerType) && Objects.equals(createAt, validModel.createAt) && Objects.equals(headerPadding, validModel.headerPadding) && Objects.equals(
             dataType, validModel.dataType) && Objects.equals(name, validModel.name) && Objects.equals(dataPadding, validModel.dataPadding) && Objects.equals(trailerType, validModel.trailerType) && Objects.equals(
             trailerPadding, validModel.trailerPadding);
@@ -95,7 +87,7 @@ public class ValidModel {
         return Objects.hash(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
     }
 
-    public static class ValidModelBuilder {
+    public static class NoClassAnnotationModelBuilder {
 
         private String headerType;
         private LocalDate createAt;
@@ -107,53 +99,53 @@ public class ValidModel {
         private String trailerType;
         private String trailerPadding;
 
-        public ValidModelBuilder headerType(final String headerType) {
+        public NoClassAnnotationModelBuilder headerType(final String headerType) {
             this.headerType = headerType;
             return this;
         }
 
-        public ValidModelBuilder createAt(final LocalDate createAt) {
+        public NoClassAnnotationModelBuilder createAt(final LocalDate createAt) {
             this.createAt = createAt;
             return this;
         }
 
-        public ValidModelBuilder headerPadding(final String headerPadding) {
+        public NoClassAnnotationModelBuilder headerPadding(final String headerPadding) {
             this.headerPadding = headerPadding;
             return this;
         }
 
-        public ValidModelBuilder dataType(final String dataType) {
+        public NoClassAnnotationModelBuilder dataType(final String dataType) {
             this.dataType = dataType;
             return this;
         }
 
-        public ValidModelBuilder name(final String name) {
+        public NoClassAnnotationModelBuilder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public ValidModelBuilder age(final int age) {
+        public NoClassAnnotationModelBuilder age(final int age) {
             this.age = age;
             return this;
         }
 
-        public ValidModelBuilder dataPadding(final String dataPadding) {
+        public NoClassAnnotationModelBuilder dataPadding(final String dataPadding) {
             this.dataPadding = dataPadding;
             return this;
         }
 
-        public ValidModelBuilder trailerType(final String trailerType) {
+        public NoClassAnnotationModelBuilder trailerType(final String trailerType) {
             this.trailerType = trailerType;
             return this;
         }
 
-        public ValidModelBuilder trailerPadding(final String trailerPadding) {
+        public NoClassAnnotationModelBuilder trailerPadding(final String trailerPadding) {
             this.trailerPadding = trailerPadding;
             return this;
         }
 
-        public ValidModel build() {
-            return new ValidModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
+        public NoClassAnnotationModel build() {
+            return new NoClassAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
 
     }

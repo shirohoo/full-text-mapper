@@ -83,10 +83,17 @@ public final class FullTextReflector {
      * @param fieldAnnotation a declared {@link Field} annotation at field level.
      * @return {@link PadCharacter}
      */
-    public static PadCharacter getPadCharacter(final FullText classAnnotation, final Field fieldAnnotation) {
+    public static PadCharacter getPadCharacter(final FullText classAnnotation, final Field fieldAnnotation) throws UnsupportedOperationException {
         final PadCharacter cpc = classAnnotation.padChar();
         final PadCharacter fpc = fieldAnnotation.padChar();
-        return cpc.equals(fpc) ? cpc : fpc;
+
+        if (cpc.isNone() && fpc.isNone()) {
+            throw new UnsupportedOperationException("Both @FullText and @Field can't be PadCharacter.NONE");
+        }
+        if (fpc.isNone() || cpc == fpc) {
+            return cpc;
+        }
+        return fpc;
     }
 
     /**
@@ -96,10 +103,17 @@ public final class FullTextReflector {
      * @param fieldAnnotation a declared {@link Field} annotation at field level.
      * @return {@link PadPosition}
      */
-    public static PadPosition getPadPosition(final FullText classAnnotation, final Field fieldAnnotation) {
+    public static PadPosition getPadPosition(final FullText classAnnotation, final Field fieldAnnotation) throws UnsupportedOperationException {
         final PadPosition cpp = classAnnotation.padPosition();
         final PadPosition fpp = fieldAnnotation.padPosition();
-        return cpp.equals(fpp) ? cpp : fpp;
+
+        if (cpp.isNone() && fpp.isNone()) {
+            throw new UnsupportedOperationException("Both @FullText and @Field can't be PadPosition.NONE");
+        }
+        if (fpp.isNone() || cpp == fpp) {
+            return cpp;
+        }
+        return fpp;
     }
 
     /**

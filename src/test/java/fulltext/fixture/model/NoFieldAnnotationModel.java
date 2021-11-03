@@ -1,6 +1,5 @@
-package fulltext.model;
+package fulltext.fixture.model;
 
-import fulltext.annotation.Field;
 import fulltext.annotation.FullText;
 import fulltext.enums.Charset;
 import fulltext.enums.PadCharacter;
