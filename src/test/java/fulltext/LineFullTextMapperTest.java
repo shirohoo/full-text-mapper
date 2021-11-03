@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import fulltext.fixture.FullTextCreator;
 import fulltext.fixture.ModelCreator;
 import fulltext.fixture.model.InvalidClassAnnotationModel;
+import fulltext.fixture.model.UnsupportedAnnotationModel;
 import fulltext.fixture.model.ValidModel;
 import fulltext.fixture.model.ValidOptionModel;
 import java.util.Optional;
@@ -38,6 +39,13 @@ class LineFullTextMapperTest {
         assertThatThrownBy(() -> mapper.readValue(FullTextCreator.VALID_DATA, InvalidClassAnnotationModel.class))
             .hasMessage("There is a problem with setting the full text object. @FullText: 301, @Field total length: 300")
             .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void readValue_exception_3() throws Exception {
+        assertThatThrownBy(() -> mapper.readValue(FullTextCreator.VALID_DATA, UnsupportedAnnotationModel.class))
+            .hasMessageMatching("Both @FullText and @Field can't be [a-zA-Z]*.NONE")
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
