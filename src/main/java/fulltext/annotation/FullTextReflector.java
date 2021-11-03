@@ -108,7 +108,7 @@ public final class FullTextReflector {
         final PadPosition fpp = fieldAnnotation.padPosition();
 
         if (cpp.isNone() && fpp.isNone()) {
-            throw new UnsupportedOperationException("Both @FullText and @Field can't be PadCharacter.NONE");
+            throw new UnsupportedOperationException("Both @FullText and @Field can't be PadPosition.NONE");
         }
         if (fpp.isNone() || cpp == fpp) {
             return cpp;
