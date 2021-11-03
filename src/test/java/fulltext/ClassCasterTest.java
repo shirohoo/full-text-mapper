@@ -25,22 +25,22 @@ class ClassCasterTest {
 
     @MethodSource
     @ParameterizedTest
-    void castFunction(final String data, final Function<String, ?> castFunction, final Object expected) throws Exception {
-        assertThat(castFunction.apply(data)).isEqualTo(expected);
+    void function(final String data, final Function<String, ?> function, final Object expected) throws Exception {
+        assertThat(function.apply(data)).isEqualTo(expected);
     }
 
-    private static Stream<Arguments> castFunction() {
+    private static Stream<Arguments> function() {
         return Stream.of(
-            Arguments.of("1000", STRING.classCast(), "1000"),
-            Arguments.of("1000", INT.classCast(), 1000),
-            Arguments.of("1000", INT_WRAPPER.classCast(), 1000),
-            Arguments.of("1000", LONG.classCast(), 1000L),
-            Arguments.of("1000", LONG_WRAPPER.classCast(), 1000L),
-            Arguments.of("1000.0", DOUBLE.classCast(), 1000.0D),
-            Arguments.of("1000.0", DOUBLE_WRAPPER.classCast(), 1000.0D),
-            Arguments.of("20201010", LOCAL_DATE.classCast(), LocalDate.of(2020, 10, 10)),
-            Arguments.of("20201010000000", LOCAL_DATE_TIME.classCast(), LocalDateTime.parse("20201010000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))),
-            Arguments.of("1000", BIG_DECIMAL.classCast(), new BigDecimal("1000"))
+            Arguments.of("1000", STRING.getFunction(), "1000"),
+            Arguments.of("1000", INT.getFunction(), 1000),
+            Arguments.of("1000", INT_WRAPPER.getFunction(), 1000),
+            Arguments.of("1000", LONG.getFunction(), 1000L),
+            Arguments.of("1000", LONG_WRAPPER.getFunction(), 1000L),
+            Arguments.of("1000.0", DOUBLE.getFunction(), 1000.0D),
+            Arguments.of("1000.0", DOUBLE_WRAPPER.getFunction(), 1000.0D),
+            Arguments.of("20201010", LOCAL_DATE.getFunction(), LocalDate.of(2020, 10, 10)),
+            Arguments.of("20201010000000", LOCAL_DATE_TIME.getFunction(), LocalDateTime.parse("20201010000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))),
+            Arguments.of("1000", BIG_DECIMAL.getFunction(), new BigDecimal("1000"))
         );
     }
 

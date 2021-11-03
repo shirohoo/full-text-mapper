@@ -21,19 +21,19 @@ public enum ClassCaster {
     ;
 
     private final Class<?> clazz;
-    private final Function<String, ?> castFunction;
+    private final Function<String, ?> function;
 
-    ClassCaster(final Class<?> clazz, final Function<String, ?> castFunction) {
+    ClassCaster(final Class<?> clazz, final Function<String, ?> function) {
         this.clazz = clazz;
-        this.castFunction = castFunction;
+        this.function = function;
     }
 
     public Class<?> getClazz() {
         return clazz;
     }
 
-    public Function<String, ?> classCast() {
-        return castFunction;
+    public Function<String, ?> getFunction() {
+        return function;
     }
 
 }
