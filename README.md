@@ -1,5 +1,10 @@
 # 👀 전문(Full-Text)
 
+![](https://img.shields.io/github/issues/shirohoo/full-text-mapper)
+![](https://img.shields.io/github/forks/shirohoo/full-text-mapper)
+![](https://img.shields.io/github/stars/shirohoo/full-text-mapper)
+![](https://img.shields.io/github/license/shirohoo/full-text-mapper)
+
 통신 당사자들이 서로 주고 받을 데이터의 포맷을 미리 약속한 후 약속된 데이터 포맷에 맞춘 데이터 패킷을 송수신 하는 것.
 
 전문 통신에서 가장 중요한 것은 데이터의 포맷과 길이입니다.
