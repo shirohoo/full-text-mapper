@@ -1,5 +1,7 @@
 # 👀 전문(Full-Text)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/e2951f374225a9fb765c/maintainability)](https://codeclimate.com/github/shirohoo/full-text-mapper/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/e2951f374225a9fb765c/test_coverage)](https://codeclimate.com/github/shirohoo/full-text-mapper/test_coverage)
 ![](https://img.shields.io/github/issues/shirohoo/full-text-mapper)
 ![](https://img.shields.io/github/forks/shirohoo/full-text-mapper)
 ![](https://img.shields.io/github/stars/shirohoo/full-text-mapper)
