@@ -1,7 +1,5 @@
 # 👀 전문(Full-Text)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/e2951f374225a9fb765c/maintainability)](https://codeclimate.com/github/shirohoo/full-text-mapper/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/e2951f374225a9fb765c/test_coverage)](https://codeclimate.com/github/shirohoo/full-text-mapper/test_coverage)
 ![](https://img.shields.io/github/issues/shirohoo/full-text-mapper)
 ![](https://img.shields.io/github/forks/shirohoo/full-text-mapper)
 ![](https://img.shields.io/github/stars/shirohoo/full-text-mapper)
@@ -98,6 +96,7 @@ dependencies {
 
 <br />
 
+- 최신 버전 기준으로 각 필드의 처리 순서는 `Top-down` 입니다. 선언 순서를 잘 지켜주세요.
 - `FullTextMapper`의 구현체는 불변이며 스레드 세이프합니다.
 - `@Field`의 속성이 `@FullText`의 속성보다 더 우선적으로 적용됩니다.
 - `@FullText`에 선언된 `길이(length)`와 `각 필드에 선언된 @Field.length의 총합`이 일치하지 않을 경우 예외를 발생시킵니다.
@@ -165,26 +164,6 @@ Optional<ValidModel> validModel = mapper.readValue(FullTextCreator.validData(), 
 
 <br />
 
-현재 작성 된 간단한 테스트 코드는 다음과 같습니다
-
-<br />
-
-```java
-class LineFullTextMapperTest {
-
-    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
-
-    @Test
-    void readValue() throws Exception {
-        Optional<ValidModel> actual = mapper.readValue(FullTextCreator.validData(), ValidModel.class);
-        assertThat(actual.get()).isEqualTo(ModelCreator.validModel());
-    }
-
-}
-```
-
-<br />
-
 ## 📌 쓰기
 
 `FullTextMapperFactory` 를 통해 `FullTextMapper` 인스턴스를 획득하고 `write(Object)`를 호출합니다.
@@ -194,26 +173,6 @@ class LineFullTextMapperTest {
 ```java
 FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
 String fullText = mapper.write(ModelCreator.validModel());
-```
-
-<br />
-
-현재 작성 된 간단한 테스트 코드는 다음과 같습니다
-
-<br />
-
-```java
-class LineFullTextMapperTest {
-
-    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
-
-    @Test
-    void write() throws Exception {
-        String actual = mapper.write(ModelCreator.validModel());
-        assertThat(actual).isEqualTo(FullTextCreator.validModel());
-    }
-
-}
 ```
 
 <br />
