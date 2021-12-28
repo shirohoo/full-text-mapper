@@ -15,33 +15,31 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class ClassCasterTest {
-
     @MethodSource
     @ParameterizedTest
-    void function(final String data, final Function<String, ?> function, final Object expected) throws Exception {
-        assertThat(function.apply(data)).isEqualTo(expected);
+    void function(final String data, String format, final BiFunction<String, String, ?> function, final Object expected) throws Exception {
+        assertThat(function.apply(data, format)).isEqualTo(expected);
     }
 
     private static Stream<Arguments> function() {
         return Stream.of(
-            Arguments.of("1000", STRING.getFunction(), "1000"),
-            Arguments.of("1000", INT.getFunction(), 1000),
-            Arguments.of("1000", INT_WRAPPER.getFunction(), 1000),
-            Arguments.of("1000", LONG.getFunction(), 1000L),
-            Arguments.of("1000", LONG_WRAPPER.getFunction(), 1000L),
-            Arguments.of("1000.0", DOUBLE.getFunction(), 1000.0D),
-            Arguments.of("1000.0", DOUBLE_WRAPPER.getFunction(), 1000.0D),
-            Arguments.of("20201010", LOCAL_DATE.getFunction(), LocalDate.of(2020, 10, 10)),
-            Arguments.of("20201010000000", LOCAL_DATE_TIME.getFunction(), LocalDateTime.parse("20201010000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))),
-            Arguments.of("1000", BIG_DECIMAL.getFunction(), new BigDecimal("1000"))
+            Arguments.of("1000", null, STRING.getFunction(), "1000"),
+            Arguments.of("1000", null, INT.getFunction(), 1000),
+            Arguments.of("1000", null, INT_WRAPPER.getFunction(), 1000),
+            Arguments.of("1000", null, LONG.getFunction(), 1000L),
+            Arguments.of("1000", null, LONG_WRAPPER.getFunction(), 1000L),
+            Arguments.of("1000.0", null, DOUBLE.getFunction(), 1000.0D),
+            Arguments.of("1000.0", null, DOUBLE_WRAPPER.getFunction(), 1000.0D),
+            Arguments.of("20201010", "yyyyMMdd", LOCAL_DATE.getFunction(), LocalDate.of(2020, 10, 10)),
+            Arguments.of("20201010000000", "yyyyMMddHHmmss", LOCAL_DATE_TIME.getFunction(), LocalDateTime.parse("20201010000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))),
+            Arguments.of("1000", null, BIG_DECIMAL.getFunction(), new BigDecimal("1000"))
         );
     }
-
 }

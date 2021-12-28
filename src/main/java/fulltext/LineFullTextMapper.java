@@ -125,6 +125,10 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private String dataBind(String data, final Object instance, final java.lang.reflect.Field field, final PadCharacter padCharacter, final PadPosition padPosition) {
         field.setAccessible(true);
+        final Field fieldAnnotation = findFieldAnnotation(field);
+        final String localDateFormat = fieldAnnotation.localDateFormat();
+        final String localDateTimeFormat = fieldAnnotation.localDateTimeFormat();
+
         for (ClassCaster classCaster : ClassCaster.values()) {
             Class<?> fieldType = field.getType();
             if (fieldType.equals(classCaster.getClazz())) {
@@ -137,7 +141,13 @@ public final class LineFullTextMapper implements FullTextMapper {
                     value = "0";
                 }
                 try {
-                    field.set(instance, classCaster.getFunction().apply(value));
+                    if (classCaster == ClassCaster.LOCAL_DATE) {
+                        field.set(instance, classCaster.getFunction().apply(value, localDateFormat));
+                    } else if (classCaster == ClassCaster.LOCAL_DATE_TIME) {
+                        field.set(instance, classCaster.getFunction().apply(value, localDateTimeFormat));
+                    } else {
+                        field.set(instance, classCaster.getFunction().apply(value, null));
+                    }
                 } catch (IllegalAccessException e) {
                     throw new RuleViolationException(field.getName() + " field is either inaccessible or final");
                 } catch (NumberFormatException e) {
@@ -173,16 +183,18 @@ public final class LineFullTextMapper implements FullTextMapper {
             final Field fieldAnnotation = findFieldAnnotation(declaredField);
             final PadCharacter padCharacter = getPadCharacter(classAnnotation, fieldAnnotation);
             final PadPosition padPosition = getPadPosition(classAnnotation, fieldAnnotation);
+            final String localDateFormat = fieldAnnotation.localDateFormat();
+            final String localDateTimeFormat = fieldAnnotation.localDateTimeFormat();
 
             declaredField.setAccessible(true);
 
             final Object field = correctNull(object, declaredField);
             final Class<?> fieldClass = field.getClass();
             if (fieldClass.equals(LocalDate.class)) {
-                String data = ((LocalDate) field).format(DateTimeFormatter.BASIC_ISO_DATE);
+                String data = ((LocalDate) field).format(DateTimeFormatter.ofPattern(localDateFormat));
                 appendData(sb, fieldAnnotation, padCharacter, padPosition, data);
             } else if (fieldClass.equals(LocalDateTime.class)) {
-                String data = ((LocalDateTime) field).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                String data = ((LocalDateTime) field).format(DateTimeFormatter.ofPattern(localDateTimeFormat));
                 appendData(sb, fieldAnnotation, padCharacter, padPosition, data);
             } else {
                 String data = field.toString();

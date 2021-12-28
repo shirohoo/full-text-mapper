@@ -1,6 +1,10 @@
 package fulltext.fixture;
 
 import fulltext.fixture.model.InvalidClassAnnotationModel;
+import fulltext.fixture.model.LocalDate1Model;
+import fulltext.fixture.model.LocalDate2Model;
+import fulltext.fixture.model.LocalDateTime1Model;
+import fulltext.fixture.model.LocalDateTime2Model;
 import fulltext.fixture.model.NoClassAnnotationModel;
 import fulltext.fixture.model.ValidModel;
 import fulltext.fixture.model.ValidOptionModel;
@@ -60,5 +64,10 @@ public final class ModelCreator {
             .trailerType("3")
             .trailerPadding("")
             .build();
+
+    public static final LocalDate1Model LOCAL_DATE1_MODEL = new LocalDate1Model(LocalDate.of(2000, 12, 31));
+    public static final LocalDate2Model LOCAL_DATE2_MODEL = new LocalDate2Model(LocalDate.of(2000, 12, 31));
+    public static final LocalDateTime1Model LOCAL_DATE_TIME1_MODEL = new LocalDateTime1Model(LocalDate.of(2000, 12, 31).atStartOfDay());
+    public static final LocalDateTime2Model LOCAL_DATE_TIME2_MODEL = new LocalDateTime2Model(LocalDate.of(2000, 12, 31).atStartOfDay());
 
 }

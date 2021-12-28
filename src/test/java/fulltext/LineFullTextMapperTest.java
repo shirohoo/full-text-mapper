@@ -7,6 +7,10 @@ import fulltext.exception.RuleViolationException;
 import fulltext.fixture.FullTextCreator;
 import fulltext.fixture.ModelCreator;
 import fulltext.fixture.model.InvalidClassAnnotationModel;
+import fulltext.fixture.model.LocalDate1Model;
+import fulltext.fixture.model.LocalDate2Model;
+import fulltext.fixture.model.LocalDateTime1Model;
+import fulltext.fixture.model.LocalDateTime2Model;
 import fulltext.fixture.model.NoConstructorModel;
 import fulltext.fixture.model.NumbersBinding;
 import fulltext.fixture.model.UnsupportedAnnotationModel;
@@ -38,6 +42,30 @@ class LineFullTextMapperTest {
             () -> assertThat(actual.getLongValue()).isEqualTo(0),
             () -> assertThat(actual.getDoubleValue()).isEqualTo(0)
         );
+    }
+
+    @Test
+    void readValue_localDate1() throws Exception {
+        LocalDate1Model actual = mapper.readValue(FullTextCreator.LOCAL_DATE1, LocalDate1Model.class);
+        assertThat(actual.getLocalDate()).isEqualTo("2020-12-31");
+    }
+
+    @Test
+    void readValue_localDate2() throws Exception {
+        LocalDate2Model actual = mapper.readValue(FullTextCreator.LOCAL_DATE2, LocalDate2Model.class);
+        assertThat(actual.getLocalDate()).isEqualTo("2020-12-31");
+    }
+
+    @Test
+    void readValue_localDateTime1() throws Exception {
+        LocalDateTime1Model actual = mapper.readValue(FullTextCreator.LOCAL_DATE_TIME1, LocalDateTime1Model.class);
+        assertThat(actual.getLocalDateTime()).isEqualTo("2020-12-31T12:00");
+    }
+
+    @Test
+    void readValue_localDateTime2() throws Exception {
+        LocalDateTime2Model actual = mapper.readValue(FullTextCreator.LOCAL_DATE_TIME2, LocalDateTime2Model.class);
+        assertThat(actual.getLocalDateTime()).isEqualTo("2020-12-31T12:00");
     }
 
     @Test
