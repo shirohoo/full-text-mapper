@@ -47,7 +47,7 @@
 <dependency>
   <groupId>io.github.shirohoo</groupId>
   <artifactId>full-text-mapper</artifactId>
-  <version>1.3</version>
+  <version>1.4</version>
 </dependency>
 ```
 
@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.shirohoo:full-text-mapper:1.3'
+    implementation 'io.github.shirohoo:full-text-mapper:1.4'
 }
 ```
 
@@ -67,7 +67,7 @@ dependencies {
 
 기본적으로 전문 한줄과 객체 한개가 일대일로 매핑됩니다.
 
-**이때 `기본생성자`가 반드시 필요하며, `접근제한자`는 `private`이여도 괜찮습니다.**
+**매핑을 하기 위해서는 `기본생성자`가 반드시 필요하며, `접근제한자`는 `private`이여도 괜찮습니다.**
 
 전문과 매핑될 클래스를 작성하고 `@FullText`를 클래스 레벨에, `@Field`를 필드 레벨에 정의합니다.
 
@@ -81,8 +81,8 @@ dependencies {
 - `int` or `Integer`
 - `long` or `Long`
 - `double` or `Double`
-- `LocalDate` - 현재 `yyyyMMdd`만 지원
-- `LocalDateTime` - 현재 `yyyyMMddHHmmss`만 지원
+- `LocalDate` - 기본 포맷 `yyyyMMdd` (변경 가능)
+- `LocalDateTime` - 기본 포맷`yyyyMMddHHmmss`(변경 가능)
 - `BigDecimal`
 
 <br />
@@ -112,12 +112,11 @@ dependencies {
     padPosition = PadPosition.LEFT_PAD // 명시하지 않을 경우 기본적으로 왼쪽에 패딩문자를 채워넣습니다.
 )
 public class ValidOptionModel {
-
     @Field(length = 1)
     private String headerType;
 
-    @Field(length = 8)
-    private LocalDate createAt; // yyyyMMdd
+    @Field(length = 10, localDateFormat = "yyyy-MM-dd") // 기본값은 yyyyMMdd 이며, 변경가능합니다.
+    private LocalDate createAt;
 
     @Field(length = 91)
     private String headerPadding;
@@ -131,7 +130,7 @@ public class ValidOptionModel {
     @Field(length = 3, padChar = PadCharacter.ZERO) // @Field의 속성이 @FullText보다 우선됩니다.
     private int age;
 
-    @Field(length = 86)
+    @Field(length = 84)
     private String dataPadding;
 
     @Field(length = 1)
@@ -139,7 +138,6 @@ public class ValidOptionModel {
 
     @Field(length = 99)
     private String trailerPadding;
-
 }
 ```
 
@@ -153,27 +151,7 @@ public class ValidOptionModel {
 
 ```java
 FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
-Optional<ValidModel> validModel = mapper.readValue(FullTextCreator.validData(), ValidModel.class);
-```
-
-<br />
-
-현재 작성 된 간단한 테스트 코드는 다음과 같습니다
-
-<br />
-
-```java
-class LineFullTextMapperTest {
-
-    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
-
-    @Test
-    void readValue() throws Exception {
-        Optional<ValidModel> actual = mapper.readValue(FullTextCreator.validData(), ValidModel.class);
-        assertThat(actual.get()).isEqualTo(ModelCreator.validModel());
-    }
-
-}
+FullTextModel fullTextModel = mapper.readValue(getFullText(), FullTextModel.class);
 ```
 
 <br />
@@ -186,27 +164,11 @@ class LineFullTextMapperTest {
 
 ```java
 FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
-String fullText = mapper.write(ModelCreator.validModel());
+String fullText = mapper.write(getFullTextModel());
 ```
 
 <br />
 
-현재 작성 된 간단한 테스트 코드는 다음과 같습니다
-
-<br />
-
-```java
-class LineFullTextMapperTest {
-
-    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
-
-    @Test
-    void write() throws Exception {
-        String actual = mapper.write(ModelCreator.validModel());
-        assertThat(actual).isEqualTo(FullTextCreator.validModel());
-    }
-
-}
-```
-
-<br />
+> 기본적으로 위 정보들만 숙지한다면 사용하는데 문제는 없을것입니다. 
+> 
+> 더욱 자세한 내용들이 궁금하다면 각 클래스에 정의된 javadoc을 참고하세요.
