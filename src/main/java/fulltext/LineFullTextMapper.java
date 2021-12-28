@@ -126,12 +126,22 @@ public final class LineFullTextMapper implements FullTextMapper {
     private String dataBind(String data, final Object instance, final java.lang.reflect.Field field, final PadCharacter padCharacter, final PadPosition padPosition) {
         field.setAccessible(true);
         for (ClassCaster classCaster : ClassCaster.values()) {
-            if (field.getType().equals(classCaster.getClazz())) {
+            Class<?> fieldType = field.getType();
+            if (fieldType.equals(classCaster.getClazz())) {
                 String value = removePad(data, padCharacter, padPosition, getLength(field));
+                if (
+                    (classCaster == ClassCaster.INT_WRAPPER ||
+                        classCaster == ClassCaster.LONG_WRAPPER ||
+                        classCaster == ClassCaster.DOUBLE_WRAPPER) &&
+                        ("".equals(value)) || value == null) {
+                    value = "0";
+                }
                 try {
                     field.set(instance, classCaster.getFunction().apply(value));
                 } catch (IllegalAccessException e) {
                     throw new RuleViolationException(field.getName() + " field is either inaccessible or final");
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Exception while assigning " + value + " to " + field.getName());
                 }
                 data = data.substring(getLength(field));
             }

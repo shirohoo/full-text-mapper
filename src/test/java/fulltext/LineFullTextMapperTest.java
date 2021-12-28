@@ -2,11 +2,13 @@ package fulltext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import fulltext.exception.RuleViolationException;
 import fulltext.fixture.FullTextCreator;
 import fulltext.fixture.ModelCreator;
 import fulltext.fixture.model.InvalidClassAnnotationModel;
 import fulltext.fixture.model.NoConstructorModel;
+import fulltext.fixture.model.NumbersBinding;
 import fulltext.fixture.model.UnsupportedAnnotationModel;
 import fulltext.fixture.model.ValidModel;
 import fulltext.fixture.model.ValidOptionModel;
@@ -26,6 +28,16 @@ class LineFullTextMapperTest {
     void readValue_option() throws Exception {
         ValidOptionModel actual = mapper.readValue(FullTextCreator.VALID_OPTION_DATA, ValidOptionModel.class);
         assertThat(actual).isEqualTo(ModelCreator.VALID_OPTION_MODEL);
+    }
+
+    @Test
+    void readValue_numbers() throws Exception {
+        NumbersBinding actual = mapper.readValue(FullTextCreator.NUMBERS_DATA, NumbersBinding.class);
+        assertAll(
+            () -> assertThat(actual.getIntValue()).isEqualTo(0),
+            () -> assertThat(actual.getLongValue()).isEqualTo(0),
+            () -> assertThat(actual.getDoubleValue()).isEqualTo(0)
+        );
     }
 
     @Test
