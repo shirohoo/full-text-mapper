@@ -19,8 +19,7 @@ import fulltext.fixture.model.ValidOptionModel;
 import org.junit.jupiter.api.Test;
 
 class LineFullTextMapperTest {
-
-    private FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
+    FullTextMapper mapper = FullTextMapperFactory.lineFullTextMapper();
 
     @Test
     void readValue() throws Exception {
@@ -107,5 +106,4 @@ class LineFullTextMapperTest {
         String actual = mapper.write(ModelCreator.VALID_OPTION_MODEL);
         assertThat(actual).isEqualTo(FullTextCreator.VALID_OPTION_DATA);
     }
-
 }

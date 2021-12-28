@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class NoClassAnnotationModel {
-
     @Field(length = 1)
     private String headerType;
 
@@ -88,7 +87,6 @@ public class NoClassAnnotationModel {
     }
 
     public static class NoClassAnnotationModelBuilder {
-
         private String headerType;
         private LocalDate createAt;
         private String headerPadding;
@@ -147,7 +145,5 @@ public class NoClassAnnotationModel {
         public NoClassAnnotationModel build() {
             return new NoClassAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
-
     }
-
 }

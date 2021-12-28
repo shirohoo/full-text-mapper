@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 class FullTextReflectorTest {
-
     @Test
     void findClassAnnotation() throws Exception {
         assertThat(FullTextReflector.findClassAnnotation(ValidModel.class)).isNotNull();
@@ -72,27 +71,27 @@ class FullTextReflectorTest {
 
     @Test
     void getPadCharacter() throws Exception {
-        // given
+        // ...given
         final FullText classAnnotation = FullTextReflector.findClassAnnotation(ValidOptionModel.class);
         final Field fieldAnnotation = FullTextReflector.findFieldAnnotation(validOptionAgeField());
 
-        // when
+        // ...when
         final PadCharacter padCharacter = FullTextReflector.getPadCharacter(classAnnotation, fieldAnnotation);
 
-        // then
+        // ...then
         assertThat(padCharacter).isEqualTo(PadCharacter.ZERO);
     }
 
     @Test
     void getPadPosition() throws Exception {
-        // given
+        // ...given
         final FullText classAnnotation = FullTextReflector.findClassAnnotation(ValidOptionModel.class);
         final Field fieldAnnotation = FullTextReflector.findFieldAnnotation(validOptionNameField());
 
-        // when
+        // ...when
         final PadPosition padPosition = FullTextReflector.getPadPosition(classAnnotation, fieldAnnotation);
 
-        // then
+        // ...then
         assertThat(padPosition).isEqualTo(PadPosition.RIGHT);
     }
 
@@ -129,5 +128,4 @@ class FullTextReflectorTest {
         final Class<?> clazz = Class.forName("fulltext.fixture.model.NoFieldAnnotationModel");
         return clazz.getDeclaredField("headerType");
     }
-
 }

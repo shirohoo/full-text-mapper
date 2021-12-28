@@ -28,7 +28,6 @@ import java.util.logging.Logger;
  * FullTextMapper mapping full text and Object to each other. In order to use it, {@link FullText} and, {@link Field} must be properly declared in the object to be mapped. This class is thread safe.
  */
 public final class LineFullTextMapper implements FullTextMapper {
-
     private final static Logger log = Logger.getGlobal();
 
     /**
@@ -125,6 +124,7 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private String dataBind(String data, final Object instance, final java.lang.reflect.Field field, final PadCharacter padCharacter, final PadPosition padPosition) {
         field.setAccessible(true);
+
         final Field fieldAnnotation = findFieldAnnotation(field);
         final String localDateFormat = fieldAnnotation.localDateFormat();
         final String localDateTimeFormat = fieldAnnotation.localDateTimeFormat();
@@ -236,5 +236,4 @@ public final class LineFullTextMapper implements FullTextMapper {
     private int padLen(final Field field, final Object data) {
         return field.length() - data.toString().length();
     }
-
 }

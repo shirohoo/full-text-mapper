@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.function.BiFunction;
 
 public enum ClassCaster {
-
     STRING(String.class, (data, nonArgs) -> data),
     INT(int.class, (data, nonArgs) -> Integer.valueOf(data)),
     INT_WRAPPER(Integer.class, (data, nonArgs) -> Integer.valueOf(data)),
@@ -35,5 +34,4 @@ public enum ClassCaster {
     public BiFunction<String, String, ?> getFunction() {
         return function;
     }
-
 }

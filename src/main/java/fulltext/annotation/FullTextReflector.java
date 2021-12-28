@@ -10,7 +10,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public final class FullTextReflector {
-
     private FullTextReflector() {
     }
 
@@ -144,5 +143,4 @@ public final class FullTextReflector {
             .map(Field::length)
             .reduce(0, Integer::sum);
     }
-
 }

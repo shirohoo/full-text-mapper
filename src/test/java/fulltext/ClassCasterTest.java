@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 class ClassCasterTest {
     @MethodSource
     @ParameterizedTest
-    void function(final String data, String format, final BiFunction<String, String, ?> function, final Object expected) throws Exception {
+    void function(final String data, final String format, final BiFunction<String, String, ?> function, final Object expected) throws Exception {
         assertThat(function.apply(data, format)).isEqualTo(expected);
     }
 

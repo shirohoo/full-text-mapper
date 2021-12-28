@@ -12,7 +12,6 @@ import fulltext.annotation.FullText;
  * In this case, Field property takes precedence over FullText.
  */
 public interface FullTextMapper {
-
     /**
      * After inputting the string data and class together, it maps the data to the instance of the input class and returns it.
      *
@@ -40,5 +39,4 @@ public interface FullTextMapper {
      * @return full text
      */
     String write(final Object object);
-
 }

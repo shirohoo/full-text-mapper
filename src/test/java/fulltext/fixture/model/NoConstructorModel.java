@@ -13,7 +13,6 @@ import java.util.Objects;
     padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
 )
 public class NoConstructorModel {
-
     @Field(length = 1)
     private String headerType;
 
@@ -93,7 +92,6 @@ public class NoConstructorModel {
     }
 
     public static class NoConstructorModelBuilder {
-
         private String headerType;
         private LocalDate createAt;
         private String headerPadding;
@@ -152,7 +150,5 @@ public class NoConstructorModel {
         public NoConstructorModel build() {
             return new NoConstructorModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
-
     }
-
 }

@@ -15,7 +15,6 @@ import java.util.Objects;
     padPosition = PadPosition.LEFT // 명시하지 않을 경우 기본적으로 왼쪽에 패딩문자를 채워넣습니다.
 )
 public class ValidOptionModel {
-
     @Field(length = 1)
     private String headerType;
 
@@ -98,7 +97,6 @@ public class ValidOptionModel {
     }
 
     public static class ValidOptionModelBuilder {
-
         private String headerType;
         private LocalDate createAt;
         private String headerPadding;
@@ -157,7 +155,5 @@ public class ValidOptionModel {
         public ValidOptionModel build() {
             return new ValidOptionModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
-
     }
-
 }
