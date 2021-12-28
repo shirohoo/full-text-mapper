@@ -2,13 +2,14 @@ package fulltext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import fulltext.exception.RuleViolationException;
 import fulltext.fixture.FullTextCreator;
 import fulltext.fixture.ModelCreator;
 import fulltext.fixture.model.InvalidClassAnnotationModel;
+import fulltext.fixture.model.NoConstructorModel;
 import fulltext.fixture.model.UnsupportedAnnotationModel;
 import fulltext.fixture.model.ValidModel;
 import fulltext.fixture.model.ValidOptionModel;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class LineFullTextMapperTest {
@@ -17,14 +18,14 @@ class LineFullTextMapperTest {
 
     @Test
     void readValue() throws Exception {
-        Optional<ValidModel> actual = mapper.readValue(FullTextCreator.VALID_DATA, ValidModel.class);
-        assertThat(actual.get()).isEqualTo(ModelCreator.VALID_MODEL);
+        ValidModel actual = mapper.readValue(FullTextCreator.VALID_DATA, ValidModel.class);
+        assertThat(actual).isEqualTo(ModelCreator.VALID_MODEL);
     }
 
     @Test
     void readValue_option() throws Exception {
-        Optional<ValidOptionModel> actual = mapper.readValue(FullTextCreator.VALID_OPTION_DATA, ValidOptionModel.class);
-        assertThat(actual.get()).isEqualTo(ModelCreator.VALID_OPTION_MODEL);
+        ValidOptionModel actual = mapper.readValue(FullTextCreator.VALID_OPTION_DATA, ValidOptionModel.class);
+        assertThat(actual).isEqualTo(ModelCreator.VALID_OPTION_MODEL);
     }
 
     @Test
@@ -46,6 +47,13 @@ class LineFullTextMapperTest {
         assertThatThrownBy(() -> mapper.readValue(FullTextCreator.VALID_DATA, UnsupportedAnnotationModel.class))
             .hasMessageMatching("Both @FullText and @Field can't be [a-zA-Z]*.NONE")
             .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void readValue_exception_4() throws Exception {
+        assertThatThrownBy(() -> mapper.readValue(FullTextCreator.VALID_DATA, NoConstructorModel.class))
+            .isInstanceOf(RuleViolationException.class)
+            .hasMessage("No suitable constructor. Make sure fulltext.fixture.model.NoConstructorModel.<init>() has a default constructor");
     }
 
     @Test

@@ -2,7 +2,6 @@ package fulltext;
 
 import fulltext.annotation.Field;
 import fulltext.annotation.FullText;
-import java.util.Optional;
 
 /**
  * <p>
@@ -19,20 +18,20 @@ public interface FullTextMapper {
      *
      * @param data  full text of string type
      * @param clazz map to full text
-     * @param <T> class in which {@link FullText} and {@link Field} are declared
-     * @return instance of Optional{@literal <}T{@literal >}
+     * @param <T>   class in which {@link FullText} and {@link Field} are declared
+     * @return instance of T
      */
-    <T> Optional<T> readValue(final String data, final Class<T> clazz);
+    <T> T readValue(final String data, final Class<T> clazz);
 
     /**
      * After inputting the byte array data and class together, it maps the data to the instance of the input class and returns it.
      *
+     * @param <T>   class in which {@link FullText} and {@link Field} are declared
      * @param data  full text of byte array type
      * @param clazz map to full text
-     * @param <T> class in which {@link FullText} and {@link Field} are declared
-     * @return instance of Optional{@literal <}T{@literal >}
+     * @return instance of T
      */
-    <T> Optional<T> readValue(final byte[] data, final Class<T> clazz);
+    <T> T readValue(final byte[] data, final Class<T> clazz);
 
     /**
      * It takes an object as input, refers to {@link FullText} and {@link Field} declared, and creates full text and returns it.

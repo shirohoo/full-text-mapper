@@ -14,13 +14,13 @@ import fulltext.enums.Charset;
 import fulltext.enums.ClassCaster;
 import fulltext.enums.PadCharacter;
 import fulltext.enums.PadPosition;
+import fulltext.exception.RuleViolationException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -51,17 +51,16 @@ public final class LineFullTextMapper implements FullTextMapper {
      * <p>
      * If data binding completes without any problems, return the created instance.
      * <p>
-     * Several exceptions may occur, but when an exception occurs, an Optional is always returned with an error log.
-     * <p>
      *
      * @param bytes Byte array type data read from the full text.
      * @param clazz A class to instantiate by binding data read from the full text.
-     * @return instance of Optional{@literal <}T {@literal >}
+     * @return instance of T
+     * @throws RuleViolationException Occurs when the code convention of this module is violated. Read the documentation.
      */
-    public <T> Optional<T> readValue(final byte[] bytes, final Class<T> clazz) {
+    public <T> T readValue(final byte[] bytes, final Class<T> clazz) {
         verifyAnnotation(clazz);
         final String line = byteArrayToString(bytes, getEncoding(clazz));
-        return Optional.ofNullable(parse(line, clazz));
+        return parse(line, clazz);
     }
 
     private String byteArrayToString(final byte[] bytes, Charset encoder) {
@@ -80,16 +79,15 @@ public final class LineFullTextMapper implements FullTextMapper {
      * <p>
      * If data binding completes without any problems, return the created instance.
      * <p>
-     * Several exceptions may occur, but when an exception occurs, it logs and always returns Optional.
-     * <p>
      *
      * @param line  String type data read from the full text.
      * @param clazz A class to instantiate by binding data read from the full text.
-     * @return instance of Optional{@literal <}T {@literal >}
+     * @return instance of T
+     * @throws RuleViolationException Occurs when the code convention of this module is violated. Read the documentation.
      */
-    public <T> Optional<T> readValue(final String line, final Class<T> clazz) {
+    public <T> T readValue(final String line, final Class<T> clazz) {
         verifyAnnotation(clazz);
-        return Optional.ofNullable(parse(line, clazz));
+        return parse(line, clazz);
     }
 
     private <T> T parse(String line, final Class<T> clazz) {
@@ -101,8 +99,7 @@ public final class LineFullTextMapper implements FullTextMapper {
         try {
             return invokeConstructor(clazz);
         } catch (Exception e) {
-            errorLogging(e);
-            return null;
+            throw new RuleViolationException("No suitable constructor. Make sure " + e.getLocalizedMessage() + " has a default constructor");
         }
     }
 
@@ -113,31 +110,29 @@ public final class LineFullTextMapper implements FullTextMapper {
     }
 
     private <T> T setInstance(String line, final Class<T> clazz, final T instance) {
-        try {
-            for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
-                final FullText classAnnotation = findClassAnnotation(clazz);
-                final Field fieldAnnotation = findFieldAnnotation(field);
-                final PadCharacter padChar = getPadCharacter(classAnnotation, fieldAnnotation);
-                final PadPosition padPosition = getPadPosition(classAnnotation, fieldAnnotation);
-                line = dataBind(line, instance, field, padChar, padPosition);
-            }
-            if (line.length() != 0) {
-                throw new IllegalArgumentException("Parsing has been completed. but remaining data exists. current data: " + line);
-            }
-            return instance;
-        } catch (IllegalAccessException e) {
-            errorLogging(e);
-            return null;
+        for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
+            final FullText classAnnotation = findClassAnnotation(clazz);
+            final Field fieldAnnotation = findFieldAnnotation(field);
+            final PadCharacter padChar = getPadCharacter(classAnnotation, fieldAnnotation);
+            final PadPosition padPosition = getPadPosition(classAnnotation, fieldAnnotation);
+            line = dataBind(line, instance, field, padChar, padPosition);
         }
+        if (line.length() != 0) {
+            throw new RuleViolationException("Parsing has been completed. but remaining data exists. current data: " + line);
+        }
+        return instance;
     }
 
-
-    private String dataBind(String data, final Object instance, final java.lang.reflect.Field field, final PadCharacter padCharacter, final PadPosition padPosition) throws IllegalAccessException {
+    private String dataBind(String data, final Object instance, final java.lang.reflect.Field field, final PadCharacter padCharacter, final PadPosition padPosition) {
         field.setAccessible(true);
         for (ClassCaster classCaster : ClassCaster.values()) {
             if (field.getType().equals(classCaster.getClazz())) {
                 String value = removePad(data, padCharacter, padPosition, getLength(field));
-                field.set(instance, classCaster.getFunction().apply(value));
+                try {
+                    field.set(instance, classCaster.getFunction().apply(value));
+                } catch (IllegalAccessException e) {
+                    throw new RuleViolationException(field.getName() + " field is either inaccessible or final");
+                }
                 data = data.substring(getLength(field));
             }
         }
@@ -189,6 +184,9 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private Object correctNull(final Object object, final java.lang.reflect.Field declaredField) {
         final Object field = fieldValue(object, declaredField);
+
+        // never exists if field is null
+        // because setAccessible(true).
         return isNull(field) ? "" : field;
     }
 
@@ -215,10 +213,6 @@ public final class LineFullTextMapper implements FullTextMapper {
 
     private int padLen(final Field field, final Object data) {
         return field.length() - data.toString().length();
-    }
-
-    private void errorLogging(final Exception e) {
-        log.severe(e.getClass() + ": " + e.getMessage() + ". returned null.");
     }
 
 }
