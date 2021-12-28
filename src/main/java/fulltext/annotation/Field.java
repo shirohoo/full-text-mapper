@@ -8,6 +8,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.time.format.DateTimeFormatter;
 
 /**
  * {@link FullTextMapper} refers to this annotation to mapping the fields of the object to the full text.
@@ -18,7 +19,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Field {
-
     /**
      * length of this field
      *
@@ -42,4 +42,15 @@ public @interface Field {
      */
     PadPosition padPosition() default PadPosition.NONE;
 
+    /**
+     * This is the default format for LocalDate. Observe the format of DateTimeFormatter.
+     * @return LocalDate format
+     */
+    String localDateFormat() default "yyyyMMdd";
+
+    /**
+     * This is the default format for LocalDateTime. Observe the format of DateTimeFormatter.
+     * @return LocalDateTime format
+     */
+    String localDateTimeFormat() default "yyyyMMddHHmmss";
 }

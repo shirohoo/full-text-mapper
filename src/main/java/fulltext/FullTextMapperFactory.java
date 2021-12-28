@@ -1,7 +1,6 @@
 package fulltext;
 
 public class FullTextMapperFactory {
-
     private FullTextMapperFactory() {
     }
 
@@ -15,9 +14,7 @@ public class FullTextMapperFactory {
     }
 
     private static class LineFullTextMapperHolder {
-
         private static final FullTextMapper instance = LineFullTextMapper.newInstance();
 
     }
-
 }

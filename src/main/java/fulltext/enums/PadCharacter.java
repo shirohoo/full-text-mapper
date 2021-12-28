@@ -1,7 +1,6 @@
 package fulltext.enums;
 
 public enum PadCharacter {
-
     NONE(""),
     SPACE(" "),
     ZERO("0"),
@@ -41,5 +40,4 @@ public enum PadCharacter {
         }
         return data;
     }
-
 }

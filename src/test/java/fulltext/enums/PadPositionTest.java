@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class PadPositionTest {
-
     @MethodSource
     @ParameterizedTest
     void isNone(final PadPosition PadPosition, final boolean expected) throws Exception {
@@ -35,5 +34,4 @@ class PadPositionTest {
             Arguments.of(PadPosition.RIGHT, false)
         );
     }
-
 }

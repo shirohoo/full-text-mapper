@@ -7,7 +7,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum Charset {
-
     UTF_8("UTF-8"),
     EUC_KR("EUC-KR"),
     ;
@@ -31,5 +30,4 @@ public enum Charset {
         }
         return MAP.get(charset);
     }
-
 }

@@ -13,7 +13,6 @@ import java.util.Objects;
     padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
 )
 public class ValidModel {
-
     @Field(length = 1)
     private String headerType;
 
@@ -155,7 +154,5 @@ public class ValidModel {
         public ValidModel build() {
             return new ValidModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
-
     }
-
 }
