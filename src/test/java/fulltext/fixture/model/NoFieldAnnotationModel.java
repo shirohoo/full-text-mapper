@@ -12,23 +12,14 @@ import java.util.Objects;
     padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
 )
 public class NoFieldAnnotationModel {
-
     private String headerType;
-
-    private LocalDate createAt; // yyyyMMdd
-
+    private LocalDate createAt;
     private String headerPadding;
-
     private String dataType;
-
     private String name;
-
     private int age;
-
     private String dataPadding;
-
     private String trailerType;
-
     private String trailerPadding;
 
     private NoFieldAnnotationModel() {
@@ -86,7 +77,6 @@ public class NoFieldAnnotationModel {
     }
 
     public static class ValidModelBuilder {
-
         private String headerType;
         private LocalDate createAt;
         private String headerPadding;
@@ -145,7 +135,5 @@ public class NoFieldAnnotationModel {
         public NoFieldAnnotationModel build() {
             return new NoFieldAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
-
     }
-
 }

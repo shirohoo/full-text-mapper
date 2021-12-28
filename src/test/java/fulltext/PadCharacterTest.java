@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class PadCharacterTest {
-
     @MethodSource
     @ParameterizedTest
     void isNone(final PadCharacter padCharacter, final boolean expected) throws Exception {
@@ -100,5 +99,4 @@ class PadCharacterTest {
             Arguments.of(PadCharacter.ZERO, "", "")
         );
     }
-
 }

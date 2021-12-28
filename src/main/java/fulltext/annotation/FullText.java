@@ -17,7 +17,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FullText {
-
     /**
      * Means the total length of one line in full text.
      *
@@ -47,5 +46,4 @@ public @interface FullText {
      * @throws UnsupportedOperationException If @FullText.PadPosition and @Field.PadPosition are both PadPosition.NONE
      */
     PadPosition padPosition() default PadPosition.LEFT;
-
 }

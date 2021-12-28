@@ -13,7 +13,6 @@ import java.util.Objects;
     padChar = PadCharacter.NONE // @Field도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
 )
 public class UnsupportedAnnotationModel {
-
     @Field(length = 1, padChar = PadCharacter.NONE) // @FullText도 PadCharacter.NONE 이므로 UnsupportedOperationException 예상
     private String headerType;
 
@@ -155,7 +154,5 @@ public class UnsupportedAnnotationModel {
         public UnsupportedAnnotationModel build() {
             return new UnsupportedAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
-
     }
-
 }

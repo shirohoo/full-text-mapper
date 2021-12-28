@@ -13,7 +13,6 @@ import java.util.Objects;
     padChar = PadCharacter.SPACE // 명시하지 않을 경우 기본값은 공백문자(" ")입니다.
 )
 public class InvalidClassAnnotationModel {
-
     @Field(length = 1)
     private String headerType;
 
@@ -96,7 +95,6 @@ public class InvalidClassAnnotationModel {
     }
 
     public static class InvalidClassAnnotationModelBuilder {
-
         private String headerType;
         private LocalDate createAt;
         private String headerPadding;
@@ -155,7 +153,5 @@ public class InvalidClassAnnotationModel {
         public InvalidClassAnnotationModel build() {
             return new InvalidClassAnnotationModel(headerType, createAt, headerPadding, dataType, name, age, dataPadding, trailerType, trailerPadding);
         }
-
     }
-
 }
