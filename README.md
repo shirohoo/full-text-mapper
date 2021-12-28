@@ -1,5 +1,10 @@
 # 👀 전문(Full-Text)
 
+![](https://img.shields.io/github/issues/shirohoo/full-text-mapper)
+![](https://img.shields.io/github/forks/shirohoo/full-text-mapper)
+![](https://img.shields.io/github/stars/shirohoo/full-text-mapper)
+![](https://img.shields.io/github/license/shirohoo/full-text-mapper)
+
 통신 당사자들이 서로 주고 받을 데이터의 포맷을 미리 약속한 후 약속된 데이터 포맷에 맞춘 데이터 패킷을 송수신 하는 것.
 
 전문 통신에서 가장 중요한 것은 데이터의 포맷과 길이입니다.
@@ -81,8 +86,8 @@ dependencies {
 - `int` or `Integer`
 - `long` or `Long`
 - `double` or `Double`
-- `LocalDate` - 기본 포맷 `yyyyMMdd` (변경 가능)
-- `LocalDateTime` - 기본 포맷`yyyyMMddHHmmss`(변경 가능)
+- `LocalDate` - 기본 포맷 `yyyyMMdd` **(변경 가능)**
+- `LocalDateTime` - 기본 포맷 `yyyyMMddHHmmss` **(변경 가능)**
 - `BigDecimal`
 
 <br />
@@ -91,12 +96,15 @@ dependencies {
 
 <br />
 
+- 최신 버전 기준으로 각 필드의 처리 순서는 `Top-down` 입니다. 선언 순서를 잘 지켜주세요.
 - `FullTextMapper`의 구현체는 불변이며 스레드 세이프합니다.
 - `@Field`의 속성이 `@FullText`의 속성보다 더 우선적으로 적용됩니다.
 - `@FullText`에 선언된 `길이(length)`와 `각 필드에 선언된 @Field.length의 총합`이 일치하지 않을 경우 예외를 발생시킵니다.
 - 클래스 레벨에 `@FullText`가 누락돼있다면 예외를 발생시킵니다.
 - 필드 레벨에 `@Field`가 누락돼있다면 예외를 발생시킵니다.
 - `@FullText`와 `@Field`의 속성들 (`PadPosition`, `PadCharacter`)이 모두 `NONE`이면 예외를 발생시킵니다.
+- `LocalDate`의 기본 포맷은 `yyyyMMdd` 이며, 이를 변경하기 위해서는 `@Field(localDateFormat = "{format}")`을 수정하십시오.
+- `LocalDateTime`의 기본 포맷은 `yyyyMMdd` 이며, 이를 변경하기 위해서는 `@Field(localDateTimeFormat = "{format}")`을 수정하십시오.
 
 <br />
 
@@ -172,3 +180,5 @@ String fullText = mapper.write(getFullTextModel());
 > 기본적으로 위 정보들만 숙지한다면 사용하는데 문제는 없을것입니다. 
 > 
 > 더욱 자세한 내용들이 궁금하다면 각 클래스에 정의된 javadoc을 참고하세요.
+
+<br />
